@@ -4,13 +4,14 @@ import 'package:appdev_proj/models/todo_model.dart';
 import 'package:appdev_proj/screens/task_details_page.dart';
 import 'package:appdev_proj/screens/add_task_page.dart';
 import 'package:appdev_proj/widgets/app_drawer.dart';
+import 'package:intl/intl.dart';
 
 class ListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('All Tasks'),
+        title: const Text('All Tasks'),
       ),
       drawer: AppDrawer(),
       body: Consumer<TodoModel>(
@@ -21,12 +22,15 @@ class ListPage extends StatelessWidget {
             itemCount: allTasks.length,
             itemBuilder: (context, index) {
               final task = allTasks[index];
+              final dueDateFormatted =
+                  DateFormat('MMMM dd, yyyy').format(task.dueDate);
+
               return ListTile(
                 title: Text(task.title),
                 subtitle:
-                    Text('${task.description} \nDue Date: ${task.dueDate}'),
+                    Text('${task.description}\nDue Date: $dueDateFormatted'),
                 trailing: IconButton(
-                  icon: Icon(Icons.delete),
+                  icon: const Icon(Icons.delete),
                   onPressed: () {
                     model.removeTask(task);
                   },
@@ -53,7 +57,7 @@ class ListPage extends StatelessWidget {
             ),
           );
         },
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
     );
   }

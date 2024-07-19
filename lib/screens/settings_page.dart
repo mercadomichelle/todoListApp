@@ -7,52 +7,45 @@ class SettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Settings'),
+        title: const Text('Settings'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text(
+            const Text(
               'Theme Settings',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Consumer<ThemeModel>(
               builder: (context, themeModel, child) {
                 return SwitchListTile(
-                  title: Text('Dark Mode'),
+                  title: const Text('Dark Mode'),
                   value: themeModel.isDarkMode,
                   onChanged: (value) {
                     themeModel.setDarkMode(value);
                   },
-                  secondary: Icon(Icons.dark_mode),
+                  secondary: const Icon(Icons.dark_mode),
                 );
               },
             ),
-            Divider(),
-            Text(
+            const Divider(),
+            const Text(
               'Other Settings',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             ListTile(
-              title: Text('Notifications'),
-              leading: Icon(Icons.notifications),
+              title: const Text('Notifications'),
+              leading: const Icon(Icons.notifications),
               onTap: () {
                 // Implement notification settings navigation or logic
               },
             ),
-            // ListTile(
-            //   title: Text('Account Settings'),
-            //   leading: Icon(Icons.account_circle),
-            //   onTap: () {
-            //     // Implement account settings navigation or logic
-            //   },
-            // ),
             ListTile(
-              title: Text('Privacy Settings'),
-              leading: Icon(Icons.privacy_tip),
+              title: const Text('Privacy Settings'),
+              leading: const Icon(Icons.privacy_tip),
               onTap: () {
                 // Implement privacy settings navigation or logic
               },

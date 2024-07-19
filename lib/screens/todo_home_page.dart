@@ -6,10 +6,10 @@ class TodoHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('To-Do App'),
+        title: const Text('To-Do App'),
       ),
       drawer: AppDrawer(),
-      body: Center(
+      body: const Center(
         child: Text('Home Page Content'),
       ),
     );

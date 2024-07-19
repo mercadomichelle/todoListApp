@@ -10,7 +10,7 @@ class UpcomingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Upcoming'),
+        title: const Text('Upcoming'),
       ),
       drawer: AppDrawer(),
       body: Consumer<TodoModel>(
@@ -27,7 +27,7 @@ class UpcomingPage extends StatelessWidget {
                 title: Text(task.title),
                 subtitle: Text(task.description),
                 trailing: IconButton(
-                  icon: Icon(Icons.delete),
+                  icon: const Icon(Icons.delete),
                   onPressed: () {
                     model.removeTask(task);
                   },
@@ -54,7 +54,7 @@ class UpcomingPage extends StatelessWidget {
             ),
           );
         },
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
     );
   }

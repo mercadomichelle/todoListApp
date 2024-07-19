@@ -67,14 +67,6 @@ class TodayPage extends StatelessWidget {
                 Navigator.pushNamed(context, '/lists');
               },
             ),
-            // ListTile(
-            //   leading: Icon(Icons.tag),
-            //   title: Text('Tags'),
-            //   onTap: () {
-            //     Navigator.pop(context);
-            //     Navigator.pushNamed(context, '/tags');
-            //   },
-            // ),
             Divider(),
             ListTile(
               leading: Icon(Icons.settings),
@@ -84,14 +76,6 @@ class TodayPage extends StatelessWidget {
                 Navigator.pushNamed(context, '/settings');
               },
             ),
-            // ListTile(
-            //   leading: Icon(Icons.exit_to_app),
-            //   title: Text('Sign Out'),
-            //   onTap: () {
-            //     Navigator.pop(context);
-            //     Navigator.pushNamed(context, '/sign-out');
-            //   },
-            // ),
           ],
         ),
       ),
