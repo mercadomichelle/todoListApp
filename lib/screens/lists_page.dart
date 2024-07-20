@@ -10,73 +10,88 @@ class ListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final primaryColor = theme.primaryColor;
+    final secondaryColor = theme.colorScheme.secondary;
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('All Tasks'),
-        backgroundColor: theme.appBarTheme.backgroundColor,
+        backgroundColor: primaryColor,
       ),
       drawer: AppDrawer(),
-      body: Container(
-        color: theme.scaffoldBackgroundColor,
-        child: Consumer<TodoModel>(
-          builder: (context, model, child) {
-            final List<Task> allTasks = model.tasks;
+      body: Consumer<TodoModel>(
+        builder: (context, model, child) {
+          final List<Task> allTasks = model.tasks;
 
-            return ListView.builder(
-              itemCount: allTasks.length,
-              itemBuilder: (context, index) {
-                final task = allTasks[index];
-                final dueDateFormatted =
-                    DateFormat('MMMM dd, yyyy').format(task.dueDate);
+          return ListView.builder(
+            itemCount: allTasks.length,
+            itemBuilder: (context, index) {
+              final task = allTasks[index];
+              final dueDateFormatted =
+                  DateFormat('MMMM dd, yyyy').format(task.dueDate);
 
-                return Padding(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 8.0, horizontal: 16.0),
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    elevation: 4,
-                    color: theme.cardColor,
-                    child: ListTile(
-                      contentPadding: const EdgeInsets.symmetric(
-                          vertical: 10.0, horizontal: 16.0),
-                      title: Text(
-                        task.title,
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          color: theme.textTheme.bodyLarge?.color,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      subtitle: Text(
-                        '${task.description?.isNotEmpty ?? false ? task.description : 'No Description'}\nDue Date: $dueDateFormatted',
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: theme.textTheme.bodyMedium?.color,
-                        ),
-                      ),
-                      trailing: IconButton(
-                        icon:
-                            Icon(Icons.delete, color: theme.colorScheme.error),
-                        onPressed: () {
-                          _confirmDelete(context, task);
-                        },
-                      ),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => TaskDetailPage(task: task),
-                          ),
-                        );
-                      },
+              return Card(
+                margin:
+                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                elevation: 4.0,
+                child: ListTile(
+                  contentPadding: const EdgeInsets.all(16.0),
+                  title: Text(
+                    task.title,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                      decoration:
+                          task.isDone ? TextDecoration.lineThrough : null,
                     ),
                   ),
-                );
-              },
-            );
-          },
-        ),
+                  subtitle: Text(
+                    '${task.description}\nDue Date: $dueDateFormatted',
+                    style: TextStyle(
+                      color: Colors.grey[700],
+                      decoration:
+                          task.isDone ? TextDecoration.lineThrough : null,
+                    ),
+                  ),
+                  trailing: IconButton(
+                    icon: Icon(Icons.delete, color: secondaryColor),
+                    onPressed: () {
+                      model.removeTask(task);
+                    },
+                  ),
+                  leading: Checkbox(
+                    value: task.isDone,
+                    onChanged: (value) {
+                      if (value != null) {
+                        model.updateTask(
+                          task,
+                          Task(
+                            id: task.id,
+                            title: task.title,
+                            description: task.description,
+                            dueDate: task.dueDate,
+                            isDone: value,
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => TaskDetailPage(task: task),
+                      ),
+                    );
+                  },
+                ),
+              );
+            },
+          );
+        },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -87,36 +102,9 @@ class ListPage extends StatelessWidget {
             ),
           );
         },
-        backgroundColor: theme.floatingActionButtonTheme.backgroundColor,
         child: const Icon(Icons.add),
+        backgroundColor: primaryColor,
       ),
-    );
-  }
-
-  void _confirmDelete(BuildContext context, Task task) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Delete Task'),
-          content: const Text('Are you sure you want to delete this task?'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                Provider.of<TodoModel>(context, listen: false).removeTask(task);
-                Navigator.of(context).pop();
-              },
-              child: const Text('Delete'),
-            ),
-          ],
-        );
-      },
     );
   }
 }
