@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../models/theme_model.dart';
 
 class AppDrawer extends StatelessWidget {
   @override
@@ -9,12 +11,12 @@ class AppDrawer extends StatelessWidget {
         children: <Widget>[
           const DrawerHeader(
             decoration: BoxDecoration(
-              color: Colors.blue,
+              color: const Color.fromARGB(255, 255, 216, 148),
             ),
             child: Text(
               'Menu',
               style: TextStyle(
-                color: Colors.white,
+                color: Color.fromARGB(255, 0, 0, 0),
                 fontSize: 24,
               ),
             ),
@@ -60,12 +62,16 @@ class AppDrawer extends StatelessWidget {
             },
           ),
           const Divider(),
-          ListTile(
-            leading: const Icon(Icons.settings),
-            title: const Text('Settings'),
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.pushNamed(context, '/settings');
+          Consumer<ThemeModel>(
+            builder: (context, themeModel, child) {
+              return SwitchListTile(
+                title: const Text('Dark Mode'),
+                value: themeModel.isDarkMode,
+                onChanged: (value) {
+                  themeModel.setDarkMode(value);
+                },
+                secondary: const Icon(Icons.dark_mode),
+              );
             },
           ),
         ],

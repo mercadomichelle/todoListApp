@@ -3,13 +3,13 @@ import 'package:flutter/foundation.dart';
 class Task {
   final String id;
   String title;
-  String description;
+  final String? description;
   DateTime dueDate;
 
   Task({
     required this.id,
     required this.title,
-    required this.description,
+    this.description,
     required this.dueDate,
   });
 }

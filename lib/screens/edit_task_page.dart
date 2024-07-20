@@ -20,7 +20,8 @@ class _EditTaskPageState extends State<EditTaskPage> {
   void initState() {
     super.initState();
     _titleController.text = widget.task.title;
-    _descriptionController.text = widget.task.description;
+    _descriptionController.text =
+        widget.task.description ?? ''; // Handle null description
     _dueDate = widget.task.dueDate;
   }
 
@@ -62,12 +63,13 @@ class _EditTaskPageState extends State<EditTaskPage> {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                if (_titleController.text.isNotEmpty &&
-                    _descriptionController.text.isNotEmpty) {
+                if (_titleController.text.isNotEmpty) {
                   final updatedTask = Task(
                     id: widget.task.id,
                     title: _titleController.text,
-                    description: _descriptionController.text,
+                    description: _descriptionController.text.isNotEmpty
+                        ? _descriptionController.text
+                        : null,
                     dueDate: _dueDate,
                   );
                   Provider.of<TodoModel>(context, listen: false)

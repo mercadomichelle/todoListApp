@@ -1,9 +1,10 @@
-import 'package:appdev_proj/widgets/app_drawer.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:appdev_proj/models/todo_model.dart';
 import 'package:appdev_proj/screens/add_task_page.dart';
 import 'package:appdev_proj/screens/task_details_page.dart';
+import 'package:appdev_proj/widgets/app_drawer.dart';
 
 class UpcomingPage extends StatelessWidget {
   @override
@@ -23,13 +24,18 @@ class UpcomingPage extends StatelessWidget {
             itemCount: upcomingTasks.length,
             itemBuilder: (context, index) {
               final task = upcomingTasks[index];
+              final description = task.description?.isNotEmpty ?? false
+                  ? task.description
+                  : 'No Description';
+
               return ListTile(
                 title: Text(task.title),
-                subtitle: Text(task.description),
+                subtitle: Text(
+                    '$description\nDue Date: ${DateFormat('MMMM dd, yyyy').format(task.dueDate)}'),
                 trailing: IconButton(
                   icon: const Icon(Icons.delete),
                   onPressed: () {
-                    model.removeTask(task);
+                    _confirmDelete(context, task);
                   },
                 ),
                 onTap: () {
@@ -56,6 +62,33 @@ class UpcomingPage extends StatelessWidget {
         },
         child: const Icon(Icons.add),
       ),
+    );
+  }
+
+  void _confirmDelete(BuildContext context, Task task) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Delete Task'),
+          content: const Text('Are you sure you want to delete this task?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                Provider.of<TodoModel>(context, listen: false).removeTask(task);
+                Navigator.of(context).pop();
+              },
+              child: const Text('Delete'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

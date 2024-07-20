@@ -1,7 +1,7 @@
-import 'package:appdev_proj/models/todo_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:appdev_proj/models/todo_model.dart';
 
 class CalendarPage extends StatefulWidget {
   @override
@@ -66,7 +66,7 @@ class _CalendarPageState extends State<CalendarPage> {
                   }).map((task) {
                     return ListTile(
                       title: Text(task.title),
-                      subtitle: Text(task.description),
+                      subtitle: Text(task.description ?? 'No description'),
                     );
                   }).toList(),
                 ),

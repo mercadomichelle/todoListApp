@@ -1,8 +1,10 @@
-import 'package:appdev_proj/screens/add_task_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../models/todo_model.dart';
-import 'task_details_page.dart';
+import 'package:appdev_proj/models/todo_model.dart';
+import 'package:appdev_proj/screens/task_details_page.dart';
+import 'package:appdev_proj/screens/add_task_page.dart';
+import 'package:appdev_proj/widgets/app_drawer.dart';
+import 'package:intl/intl.dart';
 
 class TodayPage extends StatelessWidget {
   @override
@@ -11,74 +13,7 @@ class TodayPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Today'),
       ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            const DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.blue,
-              ),
-              child: Text(
-                'Menu',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                ),
-              ),
-            ),
-            ListTile(
-              leading: const Icon(Icons.format_list_bulleted),
-              title: const Text('All Task'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.pushNamed(context, '/all-task');
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.today),
-              title: const Text('Today'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.pushNamed(context, '/today');
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.today),
-              title: const Text('Upcoming'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.pushNamed(context, '/upcoming');
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.sticky_note_2),
-              title: const Text('Sticky Wall'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.pushNamed(context, '/stickywall');
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.calendar_today),
-              title: const Text('Calendar'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.pushNamed(context, '/calendar');
-              },
-            ),
-            const Divider(),
-            ListTile(
-              leading: const Icon(Icons.settings),
-              title: const Text('Settings'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.pushNamed(context, '/settings');
-              },
-            ),
-          ],
-        ),
-      ),
+      drawer: AppDrawer(),
       body: Consumer<TodoModel>(
         builder: (context, model, child) {
           final List<Task> todayTasks = model.tasks.where((task) {
@@ -91,13 +26,18 @@ class TodayPage extends StatelessWidget {
             itemCount: todayTasks.length,
             itemBuilder: (context, index) {
               final task = todayTasks[index];
+              final description = task.description?.isNotEmpty ?? false
+                  ? task.description
+                  : 'No Description';
+
               return ListTile(
                 title: Text(task.title),
-                subtitle: Text(task.description),
+                subtitle: Text(
+                    '$description\nDue Date: ${DateFormat('MMMM dd, yyyy').format(task.dueDate)}'),
                 trailing: IconButton(
                   icon: const Icon(Icons.delete),
                   onPressed: () {
-                    model.removeTask(task);
+                    _confirmDelete(context, task);
                   },
                 ),
                 onTap: () {
@@ -124,6 +64,33 @@ class TodayPage extends StatelessWidget {
         },
         child: const Icon(Icons.add),
       ),
+    );
+  }
+
+  void _confirmDelete(BuildContext context, Task task) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Delete Task'),
+          content: const Text('Are you sure you want to delete this task?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                Provider.of<TodoModel>(context, listen: false).removeTask(task);
+                Navigator.of(context).pop();
+              },
+              child: const Text('Delete'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

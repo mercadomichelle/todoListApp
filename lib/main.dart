@@ -1,11 +1,12 @@
-import 'package:appdev_proj/screens/lists_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'screens/lists_page.dart';
 import 'screens/today_page.dart';
 import 'screens/upcoming_page.dart';
 import 'screens/calendar_page.dart';
-import 'screens/settings_page.dart';
 import 'screens/sticky_wall_page.dart';
+import 'screens/intro_page.dart';
 import 'models/todo_model.dart';
 import 'models/theme_model.dart';
 
@@ -26,107 +27,37 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           title: 'To-Do App',
           theme: themeModel.currentTheme,
-          initialRoute: '/',
+          initialRoute: '/intro',
           routes: {
-            '/': (context) => ListPage(),
+            '/intro': (context) => FutureBuilder<bool>(
+                  future: _isFirstLaunch(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      return snapshot.data == true ? IntroPage() : ListPage();
+                    } else {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                  },
+                ),
+            '/': (context) => IntroPage(),
+            '/home': (context) => ListPage(),
             '/all-task': (context) => ListPage(),
             '/today': (context) => TodayPage(),
             '/upcoming': (context) => UpcomingPage(),
-            '/sticky-wall': (context) => StickyWallPage(),
+            '/stickywall': (context) => StickyWallPage(),
             '/calendar': (context) => CalendarPage(),
-            '/settings': (context) => SettingsPage(),
           },
         ),
       ),
     );
   }
-}
 
-class TodoHomePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('To-Do App'),
-      ),
-      drawer: AppDrawer(),
-      body: const Center(
-        child: Text('Home Page Content'),
-      ),
-    );
-  }
-}
-
-class AppDrawer extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: <Widget>[
-          const DrawerHeader(
-            decoration: BoxDecoration(
-              color: Colors.blue,
-            ),
-            child: Text(
-              'Menu',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 24,
-              ),
-            ),
-          ),
-          ListTile(
-            leading: const Icon(Icons.format_list_bulleted),
-            title: const Text('All Task'),
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.pushNamed(context, '/all-task');
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.today),
-            title: const Text('Today'),
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.pushNamed(context, '/today');
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.today),
-            title: const Text('Upcoming'),
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.pushNamed(context, '/upcoming');
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.sticky_note_2),
-            title: const Text('Sticky Wall'),
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.pushNamed(context, '/sticky-wall');
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.calendar_today),
-            title: const Text('Calendar'),
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.pushNamed(context, '/calendar');
-            },
-          ),
-          const Divider(),
-          ListTile(
-            leading: const Icon(Icons.settings),
-            title: const Text('Settings'),
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.pushNamed(context, '/settings');
-            },
-          ),
-        ],
-      ),
-    );
+  Future<bool> _isFirstLaunch() async {
+    final prefs = await SharedPreferences.getInstance();
+    final isFirstLaunch = prefs.getBool('isFirstLaunch') ?? true;
+    if (isFirstLaunch) {
+      await prefs.setBool('isFirstLaunch', false);
+    }
+    return isFirstLaunch;
   }
 }
