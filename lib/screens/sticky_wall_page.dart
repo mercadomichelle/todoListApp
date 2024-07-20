@@ -193,9 +193,24 @@ class _StickyWallPageState extends State<StickyWallPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Sticky Wall'),
+        title: Text(
+          'STICKY NOTE',
+          style: TextStyle(
+            color: isDarkMode
+                ? const Color.fromARGB(255, 253, 199, 107)
+                : const Color.fromARGB(255, 253, 199, 107),
+            fontFamily: 'BebasNeue',
+            fontSize: 25,
+          ),
+        ),
+        iconTheme: const IconThemeData(
+          color: Color.fromARGB(255, 253, 199, 107),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -220,6 +235,9 @@ class _StickyWallPageState extends State<StickyWallPage> {
       floatingActionButton: FloatingActionButton(
         onPressed: _addNote,
         child: const Icon(Icons.add),
+        backgroundColor: theme.floatingActionButtonTheme.backgroundColor ??
+            const Color.fromARGB(255, 253, 199, 107),
+        shape: const CircleBorder(),
       ),
     );
   }
@@ -240,6 +258,9 @@ class NoteTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
+
     return Container(
       decoration: BoxDecoration(
         color: color,
@@ -251,18 +272,18 @@ class NoteTile extends StatelessWidget {
         children: <Widget>[
           Text(
             title,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: Colors.white,
+              color: isDarkMode ? Colors.white : Colors.black,
             ),
           ),
           const SizedBox(height: 8),
           Text(
             content,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 16,
-              color: Colors.white,
+              color: isDarkMode ? Colors.white70 : Colors.black87,
             ),
           ),
           const SizedBox(height: 10),
@@ -270,9 +291,9 @@ class NoteTile extends StatelessWidget {
             alignment: Alignment.bottomRight,
             child: Text(
               timestamp,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 12,
-                color: Colors.white70,
+                color: isDarkMode ? Colors.white54 : Colors.black54,
               ),
             ),
           ),

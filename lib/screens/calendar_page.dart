@@ -15,11 +15,29 @@ class _CalendarPageState extends State<CalendarPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Calendar'),
+        title: Text(
+          'CALENDAR',
+          style: TextStyle(
+            color: isDarkMode
+                ? const Color.fromARGB(255, 253, 199, 107)
+                : const Color.fromARGB(255, 253, 199, 107),
+            fontFamily: 'BebasNeue',
+            fontSize: 25,
+          ),
+        ),
+        iconTheme: const IconThemeData(
+          color: Color.fromARGB(255, 245, 186, 85),
+        ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Color.fromARGB(255, 247, 198, 114),
+          ),
           onPressed: () {
             Navigator.of(context).pop();
           },

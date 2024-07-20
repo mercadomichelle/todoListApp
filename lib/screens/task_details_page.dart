@@ -31,6 +31,12 @@ class TaskDetailPage extends StatelessWidget {
               Provider.of<TodoModel>(context, listen: false).notifyListeners();
             },
           ),
+          IconButton(
+            icon: Icon(Icons.delete, color: theme.iconTheme.color),
+            onPressed: () {
+              _confirmDelete(context);
+            },
+          ),
         ],
       ),
       body: Consumer<TodoModel>(
@@ -102,6 +108,33 @@ class TaskDetailPage extends StatelessWidget {
           );
         },
       ),
+    );
+  }
+
+  void _confirmDelete(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Delete Task'),
+          content: const Text('Are you sure you want to delete this task?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                Provider.of<TodoModel>(context, listen: false).removeTask(task);
+                Navigator.of(context).popUntil((route) => route.isFirst);
+              },
+              child: const Text('Delete'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

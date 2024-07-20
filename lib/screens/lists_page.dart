@@ -10,88 +10,78 @@ class ListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final primaryColor = theme.primaryColor;
-    final secondaryColor = theme.colorScheme.secondary;
+    final isDarkMode = theme.brightness == Brightness.dark;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('All Tasks'),
-        backgroundColor: primaryColor,
+        title: Text(
+          'TO DO LIST',
+          style: TextStyle(
+            color: isDarkMode
+                ? const Color.fromARGB(255, 253, 199, 107)
+                : const Color.fromARGB(255, 253, 199, 107),
+            fontFamily: 'BebasNeue',
+            fontSize: 25,
+          ),
+        ),
+        iconTheme: const IconThemeData(
+          color: Color.fromARGB(255, 253, 199, 107),
+        ),
       ),
       drawer: AppDrawer(),
-      body: Consumer<TodoModel>(
-        builder: (context, model, child) {
-          final List<Task> allTasks = model.tasks;
+      body: Container(
+        color: theme.scaffoldBackgroundColor,
+        child: Consumer<TodoModel>(
+          builder: (context, model, child) {
+            final List<Task> allTasks = model.tasks;
 
-          return ListView.builder(
-            itemCount: allTasks.length,
-            itemBuilder: (context, index) {
-              final task = allTasks[index];
-              final dueDateFormatted =
-                  DateFormat('MMMM dd, yyyy').format(task.dueDate);
+            return ListView.builder(
+              itemCount: allTasks.length,
+              itemBuilder: (context, index) {
+                final task = allTasks[index];
+                final dueDateFormatted =
+                    DateFormat('MMMM dd, yyyy').format(task.dueDate);
 
-              return Card(
-                margin:
-                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                elevation: 4.0,
-                child: ListTile(
-                  contentPadding: const EdgeInsets.all(16.0),
-                  title: Text(
-                    task.title,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                      decoration:
-                          task.isDone ? TextDecoration.lineThrough : null,
+                return Padding(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 8.0, horizontal: 16.0),
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                  ),
-                  subtitle: Text(
-                    '${task.description}\nDue Date: $dueDateFormatted',
-                    style: TextStyle(
-                      color: Colors.grey[700],
-                      decoration:
-                          task.isDone ? TextDecoration.lineThrough : null,
-                    ),
-                  ),
-                  trailing: IconButton(
-                    icon: Icon(Icons.delete, color: secondaryColor),
-                    onPressed: () {
-                      model.removeTask(task);
-                    },
-                  ),
-                  leading: Checkbox(
-                    value: task.isDone,
-                    onChanged: (value) {
-                      if (value != null) {
-                        model.updateTask(
-                          task,
-                          Task(
-                            id: task.id,
-                            title: task.title,
-                            description: task.description,
-                            dueDate: task.dueDate,
-                            isDone: value,
+                    elevation: 4,
+                    color: theme.cardColor,
+                    child: ListTile(
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 10.0, horizontal: 16.0),
+                      title: Text(
+                        task.title,
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          color: isDarkMode ? Colors.white : Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      subtitle: Text(
+                        '${task.description?.isNotEmpty ?? false ? task.description : 'No Description'}\nDue Date: $dueDateFormatted',
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: isDarkMode ? Colors.white70 : Colors.black87,
+                        ),
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => TaskDetailPage(task: task),
                           ),
                         );
-                      }
-                    },
+                      },
+                    ),
                   ),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => TaskDetailPage(task: task),
-                      ),
-                    );
-                  },
-                ),
-              );
-            },
-          );
-        },
+                );
+              },
+            );
+          },
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -102,8 +92,10 @@ class ListPage extends StatelessWidget {
             ),
           );
         },
+        backgroundColor: theme.floatingActionButtonTheme.backgroundColor ??
+            const Color.fromARGB(255, 253, 199, 107),
+        shape: const CircleBorder(),
         child: const Icon(Icons.add),
-        backgroundColor: primaryColor,
       ),
     );
   }

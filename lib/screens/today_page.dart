@@ -9,9 +9,24 @@ import 'package:intl/intl.dart';
 class TodayPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Today'),
+        title: Text(
+          'TODAY',
+          style: TextStyle(
+            color: isDarkMode
+                ? const Color.fromARGB(255, 253, 199, 107)
+                : const Color.fromARGB(255, 253, 199, 107),
+            fontFamily: 'BebasNeue',
+            fontSize: 25,
+          ),
+        ),
+        iconTheme: const IconThemeData(
+          color: Color.fromARGB(255, 253, 199, 107),
+        ),
       ),
       drawer: AppDrawer(),
       body: Consumer<TodoModel>(
@@ -34,12 +49,6 @@ class TodayPage extends StatelessWidget {
                 title: Text(task.title),
                 subtitle: Text(
                     '$description\nDue Date: ${DateFormat('MMMM dd, yyyy').format(task.dueDate)}'),
-                trailing: IconButton(
-                  icon: const Icon(Icons.delete),
-                  onPressed: () {
-                    _confirmDelete(context, task);
-                  },
-                ),
                 onTap: () {
                   Navigator.push(
                     context,
@@ -62,35 +71,11 @@ class TodayPage extends StatelessWidget {
             ),
           );
         },
+        backgroundColor: theme.floatingActionButtonTheme.backgroundColor ??
+            const Color.fromARGB(255, 253, 199, 107),
+        shape: const CircleBorder(),
         child: const Icon(Icons.add),
       ),
-    );
-  }
-
-  void _confirmDelete(BuildContext context, Task task) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Delete Task'),
-          content: const Text('Are you sure you want to delete this task?'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                Provider.of<TodoModel>(context, listen: false).removeTask(task);
-                Navigator.of(context).pop();
-              },
-              child: const Text('Delete'),
-            ),
-          ],
-        );
-      },
     );
   }
 }

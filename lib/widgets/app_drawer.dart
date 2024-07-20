@@ -6,73 +6,102 @@ class AppDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
+      child: Column(
         children: <Widget>[
           const DrawerHeader(
             decoration: BoxDecoration(
-              color: const Color.fromARGB(255, 255, 216, 148),
-            ),
-            child: Text(
-              'Menu',
-              style: TextStyle(
-                color: Color.fromARGB(255, 0, 0, 0),
-                fontSize: 24,
+              gradient: LinearGradient(
+                colors: [
+                  Color.fromARGB(255, 255, 216, 148),
+                  Color.fromARGB(255, 255, 200, 100),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
               ),
             ),
+            child: Row(
+              children: [
+                Text(
+                  'Menu',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'BebasNeue',
+                  ),
+                ),
+              ],
+            ),
           ),
-          ListTile(
-            leading: const Icon(Icons.format_list_bulleted),
-            title: const Text('All Task'),
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.pushNamed(context, '/all-task');
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.today),
-            title: const Text('Today'),
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.pushNamed(context, '/today');
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.today),
-            title: const Text('Upcoming'),
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.pushNamed(context, '/upcoming');
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.sticky_note_2),
-            title: const Text('Sticky Wall'),
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.pushNamed(context, '/stickywall');
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.calendar_today),
-            title: const Text('Calendar'),
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.pushNamed(context, '/calendar');
-            },
-          ),
-          const Divider(),
-          Consumer<ThemeModel>(
-            builder: (context, themeModel, child) {
-              return SwitchListTile(
-                title: const Text('Dark Mode'),
-                value: themeModel.isDarkMode,
-                onChanged: (value) {
-                  themeModel.setDarkMode(value);
-                },
-                secondary: const Icon(Icons.dark_mode),
-              );
-            },
+          Expanded(
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: <Widget>[
+                ListTile(
+                  leading: const Icon(Icons.format_list_bulleted,
+                      color: Color.fromARGB(255, 250, 183, 66)),
+                  title: const Text('All Task'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.pushNamed(context, '/all-task');
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.today,
+                      color: Color.fromARGB(255, 250, 183, 66)),
+                  title: const Text('Today'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.pushNamed(context, '/today');
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.schedule,
+                      color: Color.fromARGB(255, 250, 183, 66)),
+                  title: const Text('Upcoming'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.pushNamed(context, '/upcoming');
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.sticky_note_2,
+                      color: Color.fromARGB(255, 250, 183, 66)),
+                  title: const Text('Sticky Wall'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.pushNamed(context, '/stickywall');
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.calendar_today,
+                      color: Color.fromARGB(255, 250, 183, 66)),
+                  title: const Text('Calendar'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.pushNamed(context, '/calendar');
+                  },
+                ),
+                const Divider(),
+                Consumer<ThemeModel>(
+                  builder: (context, themeModel, child) {
+                    return SwitchListTile(
+                      title: const Text('Dark Mode'),
+                      value: themeModel.isDarkMode,
+                      onChanged: (value) {
+                        themeModel.setDarkMode(value);
+                      },
+                      secondary: Icon(
+                        themeModel.isDarkMode
+                            ? Icons.dark_mode
+                            : Icons.light_mode,
+                        color: const Color.fromARGB(255, 250, 183, 66),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
         ],
       ),

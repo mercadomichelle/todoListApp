@@ -19,6 +19,7 @@ class IntroPage extends StatelessWidget {
               Text(
                 'Welcome to \n OUR TO DO LIST APP',
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                      fontFamily: 'Montserrat',
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
                     ),
