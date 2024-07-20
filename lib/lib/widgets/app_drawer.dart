@@ -6,58 +6,63 @@ class AppDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var themeModel = Provider.of<ThemeModel>(context);
+    final theme = Theme.of(context);
+    final primaryColor = theme.primaryColor;
+    final secondaryColor = theme.colorScheme.secondary;
+    final onSurfaceColor = theme.colorScheme.onSurface;
 
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
-          const DrawerHeader(
+          DrawerHeader(
             decoration: BoxDecoration(
-              color: Colors.blue,
+              color: primaryColor,
             ),
             child: Text(
               'Menu',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 24,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ),
           ListTile(
-            leading: const Icon(Icons.format_list_bulleted),
-            title: const Text('All Task'),
+            leading: Icon(Icons.format_list_bulleted, color: secondaryColor),
+            title: Text('All Task', style: TextStyle(color: onSurfaceColor)),
             onTap: () {
               Navigator.pop(context);
               Navigator.pushNamed(context, '/all-task');
             },
           ),
           ListTile(
-            leading: const Icon(Icons.today),
-            title: const Text('Today'),
+            leading: Icon(Icons.today, color: secondaryColor),
+            title: Text('Today', style: TextStyle(color: onSurfaceColor)),
             onTap: () {
               Navigator.pop(context);
               Navigator.pushNamed(context, '/today');
             },
           ),
           ListTile(
-            leading: const Icon(Icons.today),
-            title: const Text('Upcoming'),
+            leading: Icon(Icons.today, color: secondaryColor),
+            title: Text('Upcoming', style: TextStyle(color: onSurfaceColor)),
             onTap: () {
               Navigator.pop(context);
               Navigator.pushNamed(context, '/upcoming');
             },
           ),
           ListTile(
-            leading: const Icon(Icons.sticky_note_2),
-            title: const Text('Sticky Wall'),
+            leading: Icon(Icons.sticky_note_2, color: secondaryColor),
+            title: Text('Sticky Wall', style: TextStyle(color: onSurfaceColor)),
             onTap: () {
               Navigator.pop(context);
               Navigator.pushNamed(context, '/stickywall');
             },
           ),
           ListTile(
-            leading: const Icon(Icons.calendar_today),
-            title: const Text('Calendar'),
+            leading: Icon(Icons.calendar_today, color: secondaryColor),
+            title: Text('Calendar', style: TextStyle(color: onSurfaceColor)),
             onTap: () {
               Navigator.pop(context);
               Navigator.pushNamed(context, '/calendar');
@@ -65,13 +70,13 @@ class AppDrawer extends StatelessWidget {
           ),
           const Divider(),
           SwitchListTile(
-            title: const Text('Dark Mode'),
+            title: Text('Dark Mode', style: TextStyle(color: onSurfaceColor)),
             value: themeModel.isDarkMode,
             onChanged: (bool value) {
               themeModel.setDarkMode(value);
               Navigator.pop(context);
             },
-            secondary: const Icon(Icons.brightness_6),
+            secondary: Icon(Icons.brightness_6, color: secondaryColor),
           ),
         ],
       ),

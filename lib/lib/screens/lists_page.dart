@@ -9,9 +9,14 @@ import 'package:intl/intl.dart';
 class ListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final primaryColor = theme.primaryColor;
+    final secondaryColor = theme.colorScheme.secondary;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('All Tasks'),
+        backgroundColor: primaryColor,
       ),
       drawer: AppDrawer(),
       body: Consumer<TodoModel>(
@@ -25,41 +30,60 @@ class ListPage extends StatelessWidget {
               final dueDateFormatted =
                   DateFormat('MMMM dd, yyyy').format(task.dueDate);
 
-              return ListTile(
-                title: Text(task.title),
-                subtitle:
-                    Text('${task.description}\nDue Date: $dueDateFormatted'),
-                trailing: IconButton(
-                  icon: const Icon(Icons.delete),
-                  onPressed: () {
-                    model.removeTask(task);
-                  },
+              return Card(
+                margin:
+                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
                 ),
-                leading: Checkbox(
-                  value: task.isDone,
-                  onChanged: (value) {
-                    if (value != null) {
-                      model.updateTask(
-                        task,
-                        Task(
-                          id: task.id,
-                          title: task.title,
-                          description: task.description,
-                          dueDate: task.dueDate,
-                          isDone: value,
-                        ),
-                      );
-                    }
-                  },
-                ),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => TaskDetailPage(task: task),
+                elevation: 4.0,
+                child: ListTile(
+                  contentPadding: const EdgeInsets.all(16.0),
+                  title: Text(
+                    task.title,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
                     ),
-                  );
-                },
+                  ),
+                  subtitle: Text(
+                    '${task.description}\nDue Date: $dueDateFormatted',
+                    style: TextStyle(
+                      color: Colors.grey[700],
+                    ),
+                  ),
+                  trailing: IconButton(
+                    icon: Icon(Icons.delete, color: secondaryColor),
+                    onPressed: () {
+                      model.removeTask(task);
+                    },
+                  ),
+                  leading: Checkbox(
+                    value: task.isDone,
+                    onChanged: (value) {
+                      if (value != null) {
+                        model.updateTask(
+                          task,
+                          Task(
+                            id: task.id,
+                            title: task.title,
+                            description: task.description,
+                            dueDate: task.dueDate,
+                            isDone: value,
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => TaskDetailPage(task: task),
+                      ),
+                    );
+                  },
+                ),
               );
             },
           );
@@ -75,6 +99,7 @@ class ListPage extends StatelessWidget {
           );
         },
         child: const Icon(Icons.add),
+        backgroundColor: primaryColor,
       ),
     );
   }

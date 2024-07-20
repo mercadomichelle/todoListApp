@@ -35,7 +35,11 @@ class _StickyWallPageState extends State<StickyWallPage> {
                   onChanged: (value) {
                     title = value;
                   },
-                  decoration: const InputDecoration(labelText: 'Title'),
+                  decoration: InputDecoration(
+                    labelText: 'Title',
+                    labelStyle:
+                        TextStyle(color: Theme.of(context).primaryColor),
+                  ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter a title';
@@ -47,7 +51,11 @@ class _StickyWallPageState extends State<StickyWallPage> {
                   onChanged: (value) {
                     content = value;
                   },
-                  decoration: const InputDecoration(labelText: 'Description'),
+                  decoration: InputDecoration(
+                    labelText: 'Description',
+                    labelStyle:
+                        TextStyle(color: Theme.of(context).primaryColor),
+                  ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter description';
@@ -108,7 +116,11 @@ class _StickyWallPageState extends State<StickyWallPage> {
                   onChanged: (value) {
                     title = value;
                   },
-                  decoration: const InputDecoration(labelText: 'Title'),
+                  decoration: InputDecoration(
+                    labelText: 'Title',
+                    labelStyle:
+                        TextStyle(color: Theme.of(context).primaryColor),
+                  ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter a title';
@@ -121,7 +133,11 @@ class _StickyWallPageState extends State<StickyWallPage> {
                   onChanged: (value) {
                     content = value;
                   },
-                  decoration: const InputDecoration(labelText: 'Description'),
+                  decoration: InputDecoration(
+                    labelText: 'Description',
+                    labelStyle:
+                        TextStyle(color: Theme.of(context).primaryColor),
+                  ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter description';
@@ -193,9 +209,13 @@ class _StickyWallPageState extends State<StickyWallPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final primaryColor = theme.primaryColor;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Sticky Wall'),
+        backgroundColor: primaryColor,
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -220,6 +240,7 @@ class _StickyWallPageState extends State<StickyWallPage> {
       floatingActionButton: FloatingActionButton(
         onPressed: _addNote,
         child: const Icon(Icons.add),
+        backgroundColor: primaryColor,
       ),
     );
   }

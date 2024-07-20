@@ -1,13 +1,12 @@
 import 'package:appdev_proj/screens/lists_page.dart';
-import 'package:appdev_proj/widgets/app_drawer.dart';
+import 'package:appdev_proj/screens/today_page.dart';
+import 'package:appdev_proj/screens/upcoming_page.dart';
+import 'package:appdev_proj/screens/calendar_page.dart';
+import 'package:appdev_proj/screens/sticky_wall_page.dart';
+import 'package:appdev_proj/models/todo_model.dart';
+import 'package:appdev_proj/models/theme_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'screens/today_page.dart';
-import 'screens/upcoming_page.dart';
-import 'screens/calendar_page.dart';
-import 'screens/sticky_wall_page.dart';
-import 'models/todo_model.dart';
-import 'models/theme_model.dart';
 
 void main() {
   runApp(MyApp());
@@ -36,21 +35,6 @@ class MyApp extends StatelessWidget {
             '/calendar': (context) => CalendarPage(),
           },
         ),
-      ),
-    );
-  }
-}
-
-class TodoHomePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('To-Do App'),
-      ),
-      drawer: AppDrawer(),
-      body: const Center(
-        child: Text('Home Page Content'),
       ),
     );
   }

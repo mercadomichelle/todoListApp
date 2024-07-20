@@ -11,21 +11,24 @@ class TaskDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final primaryColor = theme.primaryColor;
+    final secondaryColor = theme.colorScheme.secondary;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Task Details'),
+        backgroundColor: primaryColor,
         actions: [
           IconButton(
             icon: const Icon(Icons.edit),
             onPressed: () async {
-              // Await the result of the EditTaskPage and refresh the state.
               await Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => EditTaskPage(task: task),
                 ),
               );
-              // Force a rebuild to reflect the updated task details
               Provider.of<TodoModel>(context, listen: false).notifyListeners();
             },
           ),
@@ -33,10 +36,9 @@ class TaskDetailPage extends StatelessWidget {
       ),
       body: Consumer<TodoModel>(
         builder: (context, todoModel, child) {
-          // Attempt to find the updated task from the list
           final updatedTask = todoModel.tasks.firstWhere(
-            (t) => t.id == task.id, // Assuming Task has an id property
-            orElse: () => task, // Return the original task if not found
+            (t) => t.id == task.id,
+            orElse: () => task,
           );
           final dueDateFormatted =
               DateFormat('MMMM dd, yyyy').format(updatedTask.dueDate);
@@ -55,10 +57,10 @@ class TaskDetailPage extends StatelessWidget {
                   children: <Widget>[
                     Text(
                       updatedTask.title,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 28.0,
                         fontWeight: FontWeight.bold,
-                        color: Colors.blueAccent,
+                        color: primaryColor,
                       ),
                     ),
                     const SizedBox(height: 20.0),

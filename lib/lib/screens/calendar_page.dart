@@ -15,6 +15,10 @@ class _CalendarPageState extends State<CalendarPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final primaryColor = theme.primaryColor;
+    final secondaryColor = theme.colorScheme.secondary;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Calendar'),
@@ -24,6 +28,7 @@ class _CalendarPageState extends State<CalendarPage> {
             Navigator.of(context).pop();
           },
         ),
+        backgroundColor: primaryColor,
       ),
       body: Consumer<TodoModel>(
         builder: (context, model, child) {
@@ -58,6 +63,24 @@ class _CalendarPageState extends State<CalendarPage> {
                     return isSameDay(task.dueDate, day);
                   }).toList();
                 },
+                calendarStyle: CalendarStyle(
+                  todayDecoration: BoxDecoration(
+                    color: secondaryColor,
+                    shape: BoxShape.circle,
+                  ),
+                  selectedDecoration: BoxDecoration(
+                    color: primaryColor,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+                headerStyle: HeaderStyle(
+                  formatButtonVisible: false,
+                  titleCentered: true,
+                  titleTextStyle: TextStyle(
+                    color: primaryColor,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
               Expanded(
                 child: ListView(
@@ -67,6 +90,8 @@ class _CalendarPageState extends State<CalendarPage> {
                     return ListTile(
                       title: Text(task.title),
                       subtitle: Text(task.description),
+                      trailing: Icon(Icons.check_circle,
+                          color: task.isDone ? secondaryColor : Colors.grey),
                     );
                   }).toList(),
                 ),
