@@ -1,7 +1,7 @@
 import 'package:appdev_proj/screens/add_task_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../models/todo_model.dart'; // Adjust the path based on your project structure
+import '../models/todo_model.dart';
 import 'task_details_page.dart';
 
 class TodayPage extends StatelessWidget {
@@ -9,13 +9,13 @@ class TodayPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Today'),
+        title: const Text('Today'),
       ),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
-            DrawerHeader(
+            const DrawerHeader(
               decoration: BoxDecoration(
                 color: Colors.blue,
               ),
@@ -28,49 +28,49 @@ class TodayPage extends StatelessWidget {
               ),
             ),
             ListTile(
-              leading: Icon(Icons.today),
-              title: Text('Today'),
+              leading: const Icon(Icons.format_list_bulleted),
+              title: const Text('All Task'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/all-task');
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.today),
+              title: const Text('Today'),
               onTap: () {
                 Navigator.pop(context);
                 Navigator.pushNamed(context, '/today');
               },
             ),
             ListTile(
-              leading: Icon(Icons.today),
-              title: Text('Upcoming'),
+              leading: const Icon(Icons.today),
+              title: const Text('Upcoming'),
               onTap: () {
                 Navigator.pop(context);
                 Navigator.pushNamed(context, '/upcoming');
               },
             ),
             ListTile(
-              leading: Icon(Icons.sticky_note_2),
-              title: Text('Sticky Wall'),
+              leading: const Icon(Icons.sticky_note_2),
+              title: const Text('Sticky Wall'),
               onTap: () {
                 Navigator.pop(context);
                 Navigator.pushNamed(context, '/stickywall');
               },
             ),
             ListTile(
-              leading: Icon(Icons.calendar_today),
-              title: Text('Calendar'),
+              leading: const Icon(Icons.calendar_today),
+              title: const Text('Calendar'),
               onTap: () {
                 Navigator.pop(context);
                 Navigator.pushNamed(context, '/calendar');
               },
             ),
+            const Divider(),
             ListTile(
-              leading: Icon(Icons.format_list_bulleted),
-              title: Text('Lists'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.pushNamed(context, '/lists');
-              },
-            ),
-            Divider(),
-            ListTile(
-              leading: Icon(Icons.settings),
-              title: Text('Settings'),
+              leading: const Icon(Icons.settings),
+              title: const Text('Settings'),
               onTap: () {
                 Navigator.pop(context);
                 Navigator.pushNamed(context, '/settings');
@@ -95,9 +95,9 @@ class TodayPage extends StatelessWidget {
                 title: Text(task.title),
                 subtitle: Text(task.description),
                 trailing: IconButton(
-                  icon: Icon(Icons.delete),
+                  icon: const Icon(Icons.delete),
                   onPressed: () {
-                    model.removeTask(task); // Call removeTask method
+                    model.removeTask(task);
                   },
                 ),
                 onTap: () {
@@ -122,7 +122,7 @@ class TodayPage extends StatelessWidget {
             ),
           );
         },
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
     );
   }

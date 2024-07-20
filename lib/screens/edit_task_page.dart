@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:appdev_proj/models/todo_model.dart';
-// import 'package:intl/intl.dart';
 
 class EditTaskPage extends StatefulWidget {
   final Task task;
@@ -58,7 +57,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
                   });
                 }
               },
-              child: const Text('Pick Due Date'),
+              child: Text('Pick Due Date: ${_dueDate.toLocal()}'.split(' ')[0]),
             ),
             const SizedBox(height: 20),
             ElevatedButton(
@@ -66,13 +65,14 @@ class _EditTaskPageState extends State<EditTaskPage> {
                 if (_titleController.text.isNotEmpty &&
                     _descriptionController.text.isNotEmpty) {
                   final updatedTask = Task(
+                    id: widget.task.id,
                     title: _titleController.text,
                     description: _descriptionController.text,
                     dueDate: _dueDate,
                   );
                   Provider.of<TodoModel>(context, listen: false)
                       .updateTask(widget.task, updatedTask);
-                  Navigator.pop(context);
+                  Navigator.pop(context, updatedTask);
                 }
               },
               child: const Text('Save Changes'),

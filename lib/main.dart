@@ -28,12 +28,12 @@ class MyApp extends StatelessWidget {
           theme: themeModel.currentTheme,
           initialRoute: '/',
           routes: {
-            '/': (context) => TodoHomePage(),
+            '/': (context) => ListPage(),
+            '/all-task': (context) => ListPage(),
             '/today': (context) => TodayPage(),
             '/upcoming': (context) => UpcomingPage(),
             '/sticky-wall': (context) => StickyWallPage(),
             '/calendar': (context) => CalendarPage(),
-            '/lists': (context) => ListPage(),
             '/settings': (context) => SettingsPage(),
           },
         ),
@@ -77,6 +77,14 @@ class AppDrawer extends StatelessWidget {
             ),
           ),
           ListTile(
+            leading: const Icon(Icons.format_list_bulleted),
+            title: const Text('All Task'),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pushNamed(context, '/all-task');
+            },
+          ),
+          ListTile(
             leading: const Icon(Icons.today),
             title: const Text('Today'),
             onTap: () {
@@ -106,14 +114,6 @@ class AppDrawer extends StatelessWidget {
             onTap: () {
               Navigator.pop(context);
               Navigator.pushNamed(context, '/calendar');
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.format_list_bulleted),
-            title: const Text('Lists'),
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.pushNamed(context, '/lists');
             },
           ),
           const Divider(),

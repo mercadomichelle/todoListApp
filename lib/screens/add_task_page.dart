@@ -49,6 +49,7 @@ class AddTaskPage extends StatelessWidget {
                     title: _titleController.text,
                     description: _descriptionController.text,
                     dueDate: _dueDate,
+                    id: '',
                   );
                   Provider.of<TodoModel>(context, listen: false)
                       .addTask(newTask);

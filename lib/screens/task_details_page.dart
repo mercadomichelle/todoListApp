@@ -17,21 +17,27 @@ class TaskDetailPage extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.edit),
-            onPressed: () {
-              Navigator.push(
+            onPressed: () async {
+              // Await the result of the EditTaskPage and refresh the state.
+              await Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => EditTaskPage(task: task),
                 ),
               );
+              // Force a rebuild to reflect the updated task details
+              Provider.of<TodoModel>(context, listen: false).notifyListeners();
             },
           ),
         ],
       ),
       body: Consumer<TodoModel>(
         builder: (context, todoModel, child) {
-          final updatedTask =
-              todoModel.tasks.firstWhere((t) => t == task, orElse: () => task);
+          // Attempt to find the updated task from the list
+          final updatedTask = todoModel.tasks.firstWhere(
+            (t) => t.id == task.id, // Assuming Task has an id property
+            orElse: () => task, // Return the original task if not found
+          );
           final dueDateFormatted =
               DateFormat('MMMM dd, yyyy').format(updatedTask.dueDate);
 
