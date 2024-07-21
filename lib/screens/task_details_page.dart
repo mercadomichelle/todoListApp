@@ -20,7 +20,6 @@ class TaskDetailPage extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.edit, color: theme.iconTheme.color),
             onPressed: () async {
-              // Await the result of the EditTaskPage and refresh the state.
               await Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -28,7 +27,7 @@ class TaskDetailPage extends StatelessWidget {
                 ),
               );
               // Force a rebuild to reflect the updated task details
-              Provider.of<TodoModel>(context, listen: false).notifyListeners();
+              // Provider.of<TodoModel>(context, listen: false).notifyListeners();
             },
           ),
           IconButton(
@@ -41,20 +40,23 @@ class TaskDetailPage extends StatelessWidget {
       ),
       body: Consumer<TodoModel>(
         builder: (context, todoModel, child) {
-          // Attempt to find the updated task from the list
           final updatedTask = todoModel.tasks.firstWhere(
             (t) => t.id == task.id,
             orElse: () => task,
           );
           final dueDateFormatted =
               DateFormat('MMMM dd, yyyy').format(updatedTask.dueDate);
+          final createdDateFormatted =
+              DateFormat('dd MMMM yyyy').format(updatedTask.creationDate);
+          final createdTimeFormatted =
+              DateFormat('HH:mm').format(updatedTask.creationDate);
 
-          return Padding(
+          return SingleChildScrollView(
             padding: const EdgeInsets.all(16.0),
             child: Card(
               elevation: 8,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(12),
               ),
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -63,43 +65,62 @@ class TaskDetailPage extends StatelessWidget {
                   children: <Widget>[
                     Text(
                       updatedTask.title,
-                      style: theme.textTheme.headlineSmall?.copyWith(
-                        color: theme.textTheme.headlineSmall?.color ??
-                            Colors.blueAccent,
+                      style: theme.textTheme.titleLarge?.copyWith(
+                        color:
+                            theme.textTheme.titleLarge?.color ?? Colors.black,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 20.0),
+                    const SizedBox(height: 12.0),
                     if (updatedTask.description?.isNotEmpty ?? false) ...[
                       Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Icon(Icons.description, color: theme.iconTheme.color),
-                          const SizedBox(width: 10.0),
+                          const SizedBox(width: 12.0),
                           Expanded(
                             child: Text(
                               updatedTask.description!,
-                              style: theme.textTheme.bodyLarge?.copyWith(
-                                color: theme.textTheme.bodyLarge?.color ??
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                color: theme.textTheme.bodyMedium?.color ??
                                     Colors.black87,
                               ),
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 20.0),
+                      const SizedBox(height: 12.0),
                     ],
                     Row(
                       children: [
                         Icon(Icons.calendar_today,
                             color: theme.iconTheme.color),
-                        const SizedBox(width: 10.0),
+                        const SizedBox(width: 12.0),
                         Text(
                           'Due Date: $dueDateFormatted',
-                          style: theme.textTheme.bodyLarge?.copyWith(
-                            color: theme.textTheme.bodyLarge?.color ??
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: theme.textTheme.bodyMedium?.color ??
                                 Colors.black87,
                           ),
                         ),
                       ],
+                    ),
+                    const SizedBox(height: 12.0),
+                    Container(
+                      constraints: const BoxConstraints(
+                        minHeight: 550.0,
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Text(
+                          'Created at $createdDateFormatted | Time: $createdTimeFormatted',
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: theme.textTheme.bodyMedium?.color ??
+                                Colors.grey,
+                          ),
+                        ),
+                      ),
                     ),
                   ],
                 ),

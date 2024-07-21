@@ -7,6 +7,10 @@ import 'package:appdev_proj/widgets/app_drawer.dart';
 import 'package:intl/intl.dart';
 
 class ListPage extends StatelessWidget {
+  static const Color cardColor = Color.fromARGB(255, 253, 199, 107);
+
+  const ListPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -14,18 +18,16 @@ class ListPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'TO DO LIST',
           style: TextStyle(
-            color: isDarkMode
-                ? const Color.fromARGB(255, 253, 199, 107)
-                : const Color.fromARGB(255, 253, 199, 107),
+            color: cardColor,
             fontFamily: 'BebasNeue',
             fontSize: 25,
           ),
         ),
         iconTheme: const IconThemeData(
-          color: Color.fromARGB(255, 253, 199, 107),
+          color: cardColor,
         ),
       ),
       drawer: AppDrawer(),
@@ -47,25 +49,60 @@ class ListPage extends StatelessWidget {
                       vertical: 8.0, horizontal: 16.0),
                   child: Card(
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(15),
+                      side: const BorderSide(
+                        color: cardColor,
+                        width: 2,
+                      ),
                     ),
-                    elevation: 4,
-                    color: theme.cardColor,
+                    elevation: 8,
+                    color: Colors.white,
+                    shadowColor: cardColor.withOpacity(0.3),
                     child: ListTile(
                       contentPadding: const EdgeInsets.symmetric(
                           vertical: 10.0, horizontal: 16.0),
+                      leading: Theme(
+                        data: ThemeData(
+                          checkboxTheme: CheckboxThemeData(
+                            checkColor: WidgetStateProperty.all(Colors.white),
+                            fillColor: WidgetStateProperty.all(cardColor),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                          ),
+                        ),
+                        child: Checkbox(
+                          value: task.completed,
+                          onChanged: (bool? value) {
+                            model.updateTaskCompletion(task, value ?? false);
+                          },
+                        ),
+                      ),
                       title: Text(
                         task.title,
                         style: theme.textTheme.titleMedium?.copyWith(
-                          color: isDarkMode ? Colors.white : Colors.black,
+                          color: isDarkMode ? Colors.white : Colors.black87,
                           fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                          decoration: task.completed
+                              ? TextDecoration.lineThrough
+                              : TextDecoration.none,
                         ),
                       ),
                       subtitle: Text(
                         '${task.description?.isNotEmpty ?? false ? task.description : 'No Description'}\nDue Date: $dueDateFormatted',
                         style: theme.textTheme.bodyMedium?.copyWith(
-                          color: isDarkMode ? Colors.white70 : Colors.black87,
+                          color: isDarkMode ? Colors.white70 : Colors.black54,
+                          decoration: task.completed
+                              ? TextDecoration.lineThrough
+                              : TextDecoration.none,
                         ),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2, // Adjust the number of lines as needed
+                      ),
+                      trailing: const Icon(
+                        Icons.arrow_forward_ios,
+                        color: cardColor,
                       ),
                       onTap: () {
                         Navigator.push(
@@ -85,17 +122,14 @@ class ListPage extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => AddTaskPage(),
-            ),
+          showDialog(
+            context: context,
+            builder: (BuildContext context) => AddTaskPage(),
           );
         },
-        backgroundColor: theme.floatingActionButtonTheme.backgroundColor ??
-            const Color.fromARGB(255, 253, 199, 107),
+        backgroundColor: cardColor,
         shape: const CircleBorder(),
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.add, color: Colors.white),
       ),
     );
   }

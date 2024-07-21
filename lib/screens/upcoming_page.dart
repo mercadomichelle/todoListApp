@@ -43,18 +43,72 @@ class UpcomingPage extends StatelessWidget {
                   ? task.description
                   : 'No Description';
 
-              return ListTile(
-                title: Text(task.title),
-                subtitle: Text(
-                    '$description\nDue Date: ${DateFormat('MMMM dd, yyyy').format(task.dueDate)}'),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => TaskDetailPage(task: task),
+              return Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                    side: const BorderSide(
+                      color: Color.fromARGB(255, 253, 199, 107),
+                      width: 2,
                     ),
-                  );
-                },
+                  ),
+                  elevation: 8,
+                  color: Colors.white,
+                  shadowColor:
+                      Color.fromARGB(255, 253, 199, 107).withOpacity(0.3),
+                  child: ListTile(
+                    contentPadding: const EdgeInsets.symmetric(
+                        vertical: 10.0, horizontal: 16.0),
+                    title: Text(
+                      task.title,
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        color: isDarkMode ? Colors.white : Colors.black87,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                        decoration: task.completed
+                            ? TextDecoration.lineThrough
+                            : TextDecoration.none,
+                      ),
+                    ),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          description ?? '',
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: isDarkMode ? Colors.white70 : Colors.black54,
+                            decoration: task.completed
+                                ? TextDecoration.lineThrough
+                                : TextDecoration.none,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                        ),
+                        SizedBox(height: 4),
+                        Text(
+                          'Due Date: ${DateFormat('MMMM dd, yyyy').format(task.dueDate)}',
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: isDarkMode ? Colors.white70 : Colors.black54,
+                          ),
+                        ),
+                      ],
+                    ),
+                    trailing: const Icon(
+                      Icons.arrow_forward_ios,
+                      color: Color.fromARGB(255, 253, 199, 107),
+                    ),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => TaskDetailPage(task: task),
+                        ),
+                      );
+                    },
+                  ),
+                ),
               );
             },
           );

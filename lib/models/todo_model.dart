@@ -5,12 +5,16 @@ class Task {
   String title;
   final String? description;
   DateTime dueDate;
+  final DateTime creationDate;
+  bool completed;
 
   Task({
     required this.id,
     required this.title,
     this.description,
     required this.dueDate,
+    required this.creationDate,
+    this.completed = false,
   });
 }
 
@@ -35,5 +39,10 @@ class TodoModel extends ChangeNotifier {
       _tasks[index] = newTask;
       notifyListeners();
     }
+  }
+
+  void updateTaskCompletion(Task task, bool completed) {
+    task.completed = completed;
+    notifyListeners();
   }
 }

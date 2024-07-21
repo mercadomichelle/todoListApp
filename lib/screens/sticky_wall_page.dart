@@ -8,7 +8,7 @@ class StickyWallPage extends StatefulWidget {
 }
 
 class _StickyWallPageState extends State<StickyWallPage> {
-  final List<Map<String, String>> notes = [];
+  final List<Map<String, String?>> notes = [];
   final List<Color> colors = [
     Colors.yellow,
     Colors.pink,
@@ -21,7 +21,7 @@ class _StickyWallPageState extends State<StickyWallPage> {
       context: context,
       builder: (BuildContext context) {
         String title = '';
-        String content = '';
+        String? content;
         final _formKey = GlobalKey<FormState>();
 
         return AlertDialog(
@@ -49,9 +49,6 @@ class _StickyWallPageState extends State<StickyWallPage> {
                   },
                   decoration: const InputDecoration(labelText: 'Description'),
                   validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter description';
-                    }
                     return null;
                   },
                 ),
@@ -90,7 +87,7 @@ class _StickyWallPageState extends State<StickyWallPage> {
 
   void _editNote(int index) {
     String title = notes[index]['title']!;
-    String content = notes[index]['content']!;
+    String? content = notes[index]['content'];
     final _formKey = GlobalKey<FormState>();
 
     showDialog(
@@ -123,9 +120,6 @@ class _StickyWallPageState extends State<StickyWallPage> {
                   },
                   decoration: const InputDecoration(labelText: 'Description'),
                   validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter description';
-                    }
                     return null;
                   },
                 ),
@@ -222,7 +216,7 @@ class _StickyWallPageState extends State<StickyWallPage> {
             onLongPress: () => _deleteNote(index),
             child: NoteTile(
               title: notes[index]['title']!,
-              content: notes[index]['content']!,
+              content: notes[index]['content'],
               timestamp: notes[index]['timestamp']!,
               color: colors[index % colors.length],
             ),
@@ -234,10 +228,10 @@ class _StickyWallPageState extends State<StickyWallPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _addNote,
-        child: const Icon(Icons.add),
         backgroundColor: theme.floatingActionButtonTheme.backgroundColor ??
             const Color.fromARGB(255, 253, 199, 107),
         shape: const CircleBorder(),
+        child: const Icon(Icons.add),
       ),
     );
   }
@@ -245,13 +239,13 @@ class _StickyWallPageState extends State<StickyWallPage> {
 
 class NoteTile extends StatelessWidget {
   final String title;
-  final String content;
+  final String? content;
   final String timestamp;
   final Color color;
 
-  NoteTile({
+  const NoteTile({
     required this.title,
-    required this.content,
+    this.content,
     required this.timestamp,
     required this.color,
   });
@@ -278,14 +272,16 @@ class NoteTile extends StatelessWidget {
               color: isDarkMode ? Colors.white : Colors.black,
             ),
           ),
-          const SizedBox(height: 8),
-          Text(
-            content,
-            style: TextStyle(
-              fontSize: 16,
-              color: isDarkMode ? Colors.white70 : Colors.black87,
+          if (content != null && content!.isNotEmpty) ...[
+            const SizedBox(height: 8),
+            Text(
+              content!,
+              style: TextStyle(
+                fontSize: 16,
+                color: isDarkMode ? Colors.white70 : Colors.black87,
+              ),
             ),
-          ),
+          ],
           const SizedBox(height: 10),
           Align(
             alignment: Alignment.bottomRight,
