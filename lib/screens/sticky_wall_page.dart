@@ -22,64 +22,93 @@ class _StickyWallPageState extends State<StickyWallPage> {
       builder: (BuildContext context) {
         String title = '';
         String? content;
-        final _formKey = GlobalKey<FormState>();
+        final formKey = GlobalKey<FormState>();
 
-        return AlertDialog(
-          title: const Text('Add Note'),
-          content: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                TextFormField(
-                  onChanged: (value) {
-                    title = value;
-                  },
-                  decoration: const InputDecoration(labelText: 'Title'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter a title';
-                    }
-                    return null;
-                  },
-                ),
-                TextFormField(
-                  onChanged: (value) {
-                    content = value;
-                  },
-                  decoration: const InputDecoration(labelText: 'Description'),
-                  validator: (value) {
-                    return null;
-                  },
-                ),
-              ],
+        return Theme(
+          data: ThemeData.light().copyWith(
+            dialogBackgroundColor: const Color.fromARGB(255, 250, 205, 126),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.black,
+              ),
+            ),
+            textTheme: const TextTheme(
+              titleLarge: TextStyle(
+                fontFamily: 'Ubuntu',
+              ),
+              labelLarge: TextStyle(
+                fontFamily: 'Ubuntu',
+              ),
             ),
           ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Cancel'),
+          child: AlertDialog(
+            title:
+                const Text('Add Note', style: TextStyle(fontFamily: 'Ubuntu')),
+            content: Container(
+              constraints: const BoxConstraints(
+                minWidth: 300,
+                maxWidth: 300,
+              ),
+              child: Form(
+                key: formKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    TextFormField(
+                      onChanged: (value) {
+                        title = value;
+                      },
+                      decoration: const InputDecoration(labelText: 'Title'),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a title';
+                        }
+                        return null;
+                      },
+                      style: const TextStyle(fontFamily: 'Ubuntu'),
+                    ),
+                    TextFormField(
+                      onChanged: (value) {
+                        content = value;
+                      },
+                      decoration:
+                          const InputDecoration(labelText: 'Description'),
+                      validator: (value) {
+                        return null;
+                      },
+                      style: const TextStyle(fontFamily: 'Ubuntu'),
+                    ),
+                  ],
+                ),
+              ),
             ),
-            TextButton(
-              onPressed: () {
-                if (_formKey.currentState!.validate()) {
-                  String timestamp =
-                      DateFormat('EEE MMM dd kk:mm').format(DateTime.now());
-                  setState(() {
-                    notes.add({
-                      'title': title,
-                      'content': content,
-                      'timestamp': timestamp,
-                    });
-                  });
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
                   Navigator.of(context).pop();
-                }
-              },
-              child: const Text('Add'),
-            ),
-          ],
+                },
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () {
+                  if (formKey.currentState!.validate()) {
+                    String timestamp =
+                        DateFormat('EEE MMM dd kk:mm').format(DateTime.now());
+                    setState(() {
+                      notes.add({
+                        'title': title,
+                        'content': content,
+                        'timestamp': timestamp,
+                      });
+                    });
+                    Navigator.of(context).pop();
+                  }
+                },
+                child:
+                    const Text('Add', style: TextStyle(fontFamily: 'Ubuntu')),
+              ),
+            ],
+          ),
         );
       },
     );
@@ -88,69 +117,98 @@ class _StickyWallPageState extends State<StickyWallPage> {
   void _editNote(int index) {
     String title = notes[index]['title']!;
     String? content = notes[index]['content'];
-    final _formKey = GlobalKey<FormState>();
+    final formKey = GlobalKey<FormState>();
 
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Edit Note'),
-          content: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                TextFormField(
-                  initialValue: title,
-                  onChanged: (value) {
-                    title = value;
-                  },
-                  decoration: const InputDecoration(labelText: 'Title'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter a title';
-                    }
-                    return null;
-                  },
-                ),
-                TextFormField(
-                  initialValue: content,
-                  onChanged: (value) {
-                    content = value;
-                  },
-                  decoration: const InputDecoration(labelText: 'Description'),
-                  validator: (value) {
-                    return null;
-                  },
-                ),
-              ],
+        return Theme(
+          data: ThemeData.light().copyWith(
+            dialogBackgroundColor: const Color.fromARGB(255, 250, 205, 126),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.black,
+              ),
+            ),
+            textTheme: const TextTheme(
+              titleLarge: TextStyle(
+                fontFamily: 'Ubuntu',
+              ),
+              labelLarge: TextStyle(
+                fontFamily: 'Ubuntu',
+              ),
             ),
           ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Cancel'),
+          child: AlertDialog(
+            title:
+                const Text('Edit Note', style: TextStyle(fontFamily: 'Ubuntu')),
+            content: Container(
+              constraints: const BoxConstraints(
+                maxWidth: 400,
+              ),
+              child: Form(
+                key: formKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    TextFormField(
+                      initialValue: title,
+                      onChanged: (value) {
+                        title = value;
+                      },
+                      decoration: const InputDecoration(labelText: 'Title'),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a title';
+                        }
+                        return null;
+                      },
+                      style: const TextStyle(fontFamily: 'Ubuntu'),
+                    ),
+                    TextFormField(
+                      initialValue: content,
+                      onChanged: (value) {
+                        content = value;
+                      },
+                      decoration:
+                          const InputDecoration(labelText: 'Description'),
+                      validator: (value) {
+                        return null;
+                      },
+                      style: const TextStyle(fontFamily: 'Ubuntu'),
+                    ),
+                  ],
+                ),
+              ),
             ),
-            TextButton(
-              onPressed: () {
-                if (_formKey.currentState!.validate()) {
-                  String timestamp =
-                      DateFormat('EEE MMM dd kk:mm').format(DateTime.now());
-                  setState(() {
-                    notes[index] = {
-                      'title': title,
-                      'content': content,
-                      'timestamp': timestamp,
-                    };
-                  });
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
                   Navigator.of(context).pop();
-                }
-              },
-              child: const Text('Save'),
-            ),
-          ],
+                },
+                child: const Text('Cancel',
+                    style: TextStyle(fontFamily: 'Ubuntu')),
+              ),
+              TextButton(
+                onPressed: () {
+                  if (formKey.currentState!.validate()) {
+                    String timestamp =
+                        DateFormat('EEE MMM dd kk:mm').format(DateTime.now());
+                    setState(() {
+                      notes[index] = {
+                        'title': title,
+                        'content': content,
+                        'timestamp': timestamp,
+                      };
+                    });
+                    Navigator.of(context).pop();
+                  }
+                },
+                child:
+                    const Text('Save', style: TextStyle(fontFamily: 'Ubuntu')),
+              ),
+            ],
+          ),
         );
       },
     );
@@ -160,26 +218,48 @@ class _StickyWallPageState extends State<StickyWallPage> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Delete Note'),
-          content: const Text('Are you sure you want to delete this note?'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Cancel'),
+        return Theme(
+          data: ThemeData.light().copyWith(
+            dialogBackgroundColor: const Color.fromARGB(255, 250, 205, 126),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.black,
+              ),
             ),
-            TextButton(
-              onPressed: () {
-                setState(() {
-                  notes.removeAt(index);
-                });
-                Navigator.of(context).pop();
-              },
-              child: const Text('Delete'),
+            textTheme: const TextTheme(
+              titleLarge: TextStyle(
+                fontFamily: 'Ubuntu',
+              ),
+              labelLarge: TextStyle(
+                fontFamily: 'Ubuntu',
+              ),
             ),
-          ],
+          ),
+          child: AlertDialog(
+            title: const Text('Delete Note',
+                style: TextStyle(fontFamily: 'Ubuntu')),
+            content: const Text('Are you sure you want to delete this note?',
+                style: TextStyle(fontFamily: 'Ubuntu')),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Cancel',
+                    style: TextStyle(fontFamily: 'Ubuntu')),
+              ),
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    notes.removeAt(index);
+                  });
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Delete',
+                    style: TextStyle(fontFamily: 'Ubuntu')),
+              ),
+            ],
+          ),
         );
       },
     );
@@ -190,14 +270,18 @@ class _StickyWallPageState extends State<StickyWallPage> {
     final theme = Theme.of(context);
     final isDarkMode = theme.brightness == Brightness.dark;
 
+    final backgroundColor = isDarkMode ? Colors.black : Colors.white70;
+    final textColor =
+        isDarkMode ? const Color.fromARGB(255, 0, 0, 0) : Colors.black;
+    const yellowColor = Color.fromARGB(255, 253, 199, 107);
+
     return Scaffold(
+      backgroundColor: backgroundColor,
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'STICKY NOTE',
           style: TextStyle(
-            color: isDarkMode
-                ? const Color.fromARGB(255, 253, 199, 107)
-                : const Color.fromARGB(255, 253, 199, 107),
+            color: Color.fromARGB(255, 253, 199, 107),
             fontFamily: 'BebasNeue',
             fontSize: 25,
           ),
@@ -219,6 +303,7 @@ class _StickyWallPageState extends State<StickyWallPage> {
               content: notes[index]['content'],
               timestamp: notes[index]['timestamp']!,
               color: colors[index % colors.length],
+              textColor: textColor,
             ),
           ),
           staggeredTileBuilder: (int index) => const StaggeredTile.fit(2),
@@ -228,8 +313,8 @@ class _StickyWallPageState extends State<StickyWallPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _addNote,
-        backgroundColor: theme.floatingActionButtonTheme.backgroundColor ??
-            const Color.fromARGB(255, 253, 199, 107),
+        backgroundColor:
+            theme.floatingActionButtonTheme.backgroundColor ?? yellowColor,
         shape: const CircleBorder(),
         child: const Icon(Icons.add),
       ),
@@ -242,19 +327,19 @@ class NoteTile extends StatelessWidget {
   final String? content;
   final String timestamp;
   final Color color;
+  final Color textColor;
 
   const NoteTile({
+    super.key,
     required this.title,
     this.content,
     required this.timestamp,
     required this.color,
+    required this.textColor,
   });
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final isDarkMode = theme.brightness == Brightness.dark;
-
     return Container(
       decoration: BoxDecoration(
         color: color,
@@ -267,19 +352,19 @@ class NoteTile extends StatelessWidget {
           Text(
             title,
             style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: isDarkMode ? Colors.white : Colors.black,
-            ),
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: textColor,
+                fontFamily: 'Ubuntu'),
           ),
           if (content != null && content!.isNotEmpty) ...[
             const SizedBox(height: 8),
             Text(
               content!,
               style: TextStyle(
-                fontSize: 16,
-                color: isDarkMode ? Colors.white70 : Colors.black87,
-              ),
+                  fontSize: 16,
+                  color: textColor.withOpacity(0.87),
+                  fontFamily: 'Ubuntu'),
             ),
           ],
           const SizedBox(height: 10),
@@ -289,7 +374,8 @@ class NoteTile extends StatelessWidget {
               timestamp,
               style: TextStyle(
                 fontSize: 12,
-                color: isDarkMode ? Colors.white54 : Colors.black54,
+                color: textColor.withOpacity(0.54),
+                fontFamily: 'Ubuntu',
               ),
             ),
           ),

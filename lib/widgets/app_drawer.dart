@@ -40,7 +40,12 @@ class AppDrawer extends StatelessWidget {
                 ListTile(
                   leading: const Icon(Icons.format_list_bulleted,
                       color: Color.fromARGB(255, 250, 183, 66)),
-                  title: const Text('All Task'),
+                  title: const Text(
+                    'All Task',
+                    style: TextStyle(
+                      fontFamily: 'Montserrat',
+                    ),
+                  ),
                   onTap: () {
                     Navigator.pop(context);
                     Navigator.pushNamed(context, '/all-task');
@@ -49,7 +54,12 @@ class AppDrawer extends StatelessWidget {
                 ListTile(
                   leading: const Icon(Icons.today,
                       color: Color.fromARGB(255, 250, 183, 66)),
-                  title: const Text('Today'),
+                  title: const Text(
+                    'Today',
+                    style: TextStyle(
+                      fontFamily: 'Montserrat',
+                    ),
+                  ),
                   onTap: () {
                     Navigator.pop(context);
                     Navigator.pushNamed(context, '/today');
@@ -58,7 +68,12 @@ class AppDrawer extends StatelessWidget {
                 ListTile(
                   leading: const Icon(Icons.schedule,
                       color: Color.fromARGB(255, 250, 183, 66)),
-                  title: const Text('Upcoming'),
+                  title: const Text(
+                    'Upcoming',
+                    style: TextStyle(
+                      fontFamily: 'Montserrat',
+                    ),
+                  ),
                   onTap: () {
                     Navigator.pop(context);
                     Navigator.pushNamed(context, '/upcoming');
@@ -67,7 +82,12 @@ class AppDrawer extends StatelessWidget {
                 ListTile(
                   leading: const Icon(Icons.sticky_note_2,
                       color: Color.fromARGB(255, 250, 183, 66)),
-                  title: const Text('Sticky Wall'),
+                  title: const Text(
+                    'Sticky Wall',
+                    style: TextStyle(
+                      fontFamily: 'Montserrat',
+                    ),
+                  ),
                   onTap: () {
                     Navigator.pop(context);
                     Navigator.pushNamed(context, '/stickywall');
@@ -76,7 +96,12 @@ class AppDrawer extends StatelessWidget {
                 ListTile(
                   leading: const Icon(Icons.calendar_today,
                       color: Color.fromARGB(255, 250, 183, 66)),
-                  title: const Text('Calendar'),
+                  title: const Text(
+                    'Calendar',
+                    style: TextStyle(
+                      fontFamily: 'Montserrat',
+                    ),
+                  ),
                   onTap: () {
                     Navigator.pop(context);
                     Navigator.pushNamed(context, '/calendar');
@@ -86,7 +111,12 @@ class AppDrawer extends StatelessWidget {
                 Consumer<ThemeModel>(
                   builder: (context, themeModel, child) {
                     return SwitchListTile(
-                      title: const Text('Dark Mode'),
+                      title: const Text(
+                        'Dark Mode',
+                        style: TextStyle(
+                          fontFamily: 'Montserrat',
+                        ),
+                      ),
                       value: themeModel.isDarkMode,
                       onChanged: (value) {
                         themeModel.setDarkMode(value);

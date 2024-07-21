@@ -24,7 +24,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
       ),
       child: Container(
         constraints: const BoxConstraints(maxWidth: 400),
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(20.0),
         child: Form(
           key: _formKey,
           child: Column(
@@ -33,19 +33,26 @@ class _AddTaskPageState extends State<AddTaskPage> {
             children: [
               TextFormField(
                 controller: _titleController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Title',
-                  labelStyle: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
-                  border: OutlineInputBorder(),
+                  labelStyle:
+                      TextStyle(color: Colors.black, fontFamily: 'Ubuntu'),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12.0),
+                  ),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color.fromARGB(255, 0, 0, 0)),
+                    borderSide: BorderSide(color: Colors.black),
+                    borderRadius: BorderRadius.circular(12.0),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color.fromARGB(255, 0, 0, 0)),
+                    borderSide: BorderSide(color: Colors.black),
+                    borderRadius: BorderRadius.circular(12.0),
                   ),
                   filled: true,
                   fillColor: Color.fromARGB(255, 250, 205, 126),
                 ),
+                style: TextStyle(color: Colors.black, fontFamily: 'Ubuntu'),
+                cursorColor: Colors.black,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter a title';
@@ -56,20 +63,27 @@ class _AddTaskPageState extends State<AddTaskPage> {
               const SizedBox(height: 16),
               TextFormField(
                 controller: _descriptionController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Description (Optional)',
-                  labelStyle: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
-                  border: OutlineInputBorder(),
+                  labelStyle:
+                      TextStyle(color: Colors.black, fontFamily: 'Ubuntu'),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12.0),
+                  ),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color.fromARGB(255, 0, 0, 0)),
+                    borderSide: BorderSide(color: Colors.black),
+                    borderRadius: BorderRadius.circular(12.0),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color.fromARGB(255, 0, 0, 0)),
+                    borderSide: BorderSide(color: Colors.black),
+                    borderRadius: BorderRadius.circular(15.0),
                   ),
                   filled: true,
                   fillColor: Color.fromARGB(255, 250, 205, 126),
                   alignLabelWithHint: true,
                 ),
+                style: TextStyle(color: Colors.black, fontFamily: 'Ubuntu'),
+                cursorColor: Colors.black,
                 maxLines: 8,
               ),
               const SizedBox(height: 16),
@@ -80,6 +94,24 @@ class _AddTaskPageState extends State<AddTaskPage> {
                     initialDate: DateTime.now(),
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2101),
+                    builder: (context, child) {
+                      return Theme(
+                        data: ThemeData.light().copyWith(
+                          colorScheme: const ColorScheme.light(
+                            primary: Color.fromARGB(255, 250, 205, 126),
+                            onPrimary: Colors.black,
+                            onSurface: Colors.black,
+                          ),
+                          textButtonTheme: TextButtonThemeData(
+                            style: TextButton.styleFrom(
+                              foregroundColor: Colors.black,
+                            ),
+                          ),
+                          dialogBackgroundColor: Colors.white,
+                        ),
+                        child: child!,
+                      );
+                    },
                   );
                   if (pickedDate != null && pickedDate != _dueDate) {
                     setState(() {
@@ -89,10 +121,10 @@ class _AddTaskPageState extends State<AddTaskPage> {
                 },
                 style: TextButton.styleFrom(
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5.0),
+                    borderRadius: BorderRadius.circular(12.0),
                   ),
                   side: const BorderSide(
-                    color: Color.fromARGB(255, 0, 0, 0),
+                    color: Colors.black,
                     width: 1,
                   ),
                   padding:
@@ -108,21 +140,21 @@ class _AddTaskPageState extends State<AddTaskPage> {
                         const Text(
                           'Deadline',
                           style: TextStyle(
-                            color: Color.fromARGB(255, 0, 0, 0),
-                          ),
+                              color: Colors.black, fontFamily: 'Ubuntu'),
                         ),
                         Text(
                           DateFormat('dd MMMM yyyy').format(_dueDate),
                           style: const TextStyle(
-                            color: Color.fromARGB(255, 0, 0, 0),
+                            color: Colors.black,
                             fontSize: 16,
+                            fontFamily: 'Ubuntu',
                           ),
                         ),
                       ],
                     ),
                     const Icon(
                       Icons.calendar_today,
-                      color: Color.fromARGB(255, 0, 0, 0),
+                      color: Colors.black,
                     ),
                   ],
                 ),
@@ -147,10 +179,10 @@ class _AddTaskPageState extends State<AddTaskPage> {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 248, 248, 247),
+                    backgroundColor: Colors.white,
                     minimumSize: const Size(300, 60),
                     side: const BorderSide(
-                      color: Color.fromARGB(255, 0, 0, 0),
+                      color: Colors.black,
                     ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(25.0),
@@ -159,9 +191,10 @@ class _AddTaskPageState extends State<AddTaskPage> {
                   child: const Text(
                     'ADD TASK',
                     style: TextStyle(
-                      color: Color.fromARGB(255, 0, 0, 0),
+                      color: Colors.black,
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
+                      fontFamily: 'Ubuntu',
                     ),
                   ),
                 ),

@@ -7,118 +7,101 @@ import 'package:appdev_proj/widgets/app_drawer.dart';
 import 'package:intl/intl.dart';
 
 class ListPage extends StatelessWidget {
-  static const Color cardColor = Color.fromARGB(255, 253, 199, 107);
-
-  const ListPage({super.key});
+  static const routeName = '/list';
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDarkMode = theme.brightness == Brightness.dark;
+    final yellowColor = const Color.fromARGB(255, 253, 199, 107);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'TO DO LIST',
+        title: Text(
+          'TASKS',
           style: TextStyle(
-            color: cardColor,
+            color: yellowColor,
             fontFamily: 'BebasNeue',
             fontSize: 25,
           ),
         ),
-        iconTheme: const IconThemeData(
-          color: cardColor,
+        iconTheme: IconThemeData(
+          color: yellowColor,
         ),
       ),
       drawer: AppDrawer(),
-      body: Container(
-        color: theme.scaffoldBackgroundColor,
-        child: Consumer<TodoModel>(
-          builder: (context, model, child) {
-            final List<Task> allTasks = model.tasks;
+      body: Consumer<TodoModel>(
+        builder: (context, model, child) {
+          if (model.isLoading) {
+            return Center(
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(yellowColor),
+              ),
+            );
+          }
 
-            return ListView.builder(
-              itemCount: allTasks.length,
-              itemBuilder: (context, index) {
-                final task = allTasks[index];
-                final dueDateFormatted =
-                    DateFormat('MMMM dd, yyyy').format(task.dueDate);
+          final List<Task> recentTasks = model.recentTasks;
+          final List<Task> completedTasks = model.completedTasks;
 
-                return Padding(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 8.0, horizontal: 16.0),
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      side: const BorderSide(
-                        color: cardColor,
-                        width: 2,
-                      ),
-                    ),
-                    elevation: 8,
-                    color: Colors.white,
-                    shadowColor: cardColor.withOpacity(0.3),
-                    child: ListTile(
-                      contentPadding: const EdgeInsets.symmetric(
-                          vertical: 10.0, horizontal: 16.0),
-                      leading: Theme(
-                        data: ThemeData(
-                          checkboxTheme: CheckboxThemeData(
-                            checkColor: WidgetStateProperty.all(Colors.white),
-                            fillColor: WidgetStateProperty.all(cardColor),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                          ),
-                        ),
-                        child: Checkbox(
-                          value: task.completed,
-                          onChanged: (bool? value) {
-                            model.updateTaskCompletion(task, value ?? false);
-                          },
-                        ),
-                      ),
-                      title: Text(
-                        task.title,
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          color: isDarkMode ? Colors.white : Colors.black87,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                          decoration: task.completed
-                              ? TextDecoration.lineThrough
-                              : TextDecoration.none,
-                        ),
-                      ),
-                      subtitle: Text(
-                        '${task.description?.isNotEmpty ?? false ? task.description : 'No Description'}\nDue Date: $dueDateFormatted',
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: isDarkMode ? Colors.white70 : Colors.black54,
-                          decoration: task.completed
-                              ? TextDecoration.lineThrough
-                              : TextDecoration.none,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2, // Adjust the number of lines as needed
-                      ),
-                      trailing: const Icon(
-                        Icons.arrow_forward_ios,
-                        color: cardColor,
-                      ),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => TaskDetailPage(task: task),
-                          ),
-                        );
-                      },
+          if (recentTasks.isEmpty && completedTasks.isEmpty) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    'assets/images/no_tasks2.png',
+                    height: 200,
+                    width: 200,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'No tasks available.',
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      color: yellowColor,
+                      fontFamily: 'Montserrat',
+                      fontSize: 20,
+                      fontStyle: FontStyle.italic,
                     ),
                   ),
-                );
-              },
+                ],
+              ),
             );
-          },
-        ),
+          }
+
+          return ListView(
+            children: [
+              if (recentTasks.isNotEmpty) ...[
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 16.0, horizontal: 16.0),
+                  child: Text(
+                    'Recent Tasks',
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      color: yellowColor,
+                      fontFamily: 'Montserrat',
+                    ),
+                  ),
+                ),
+                ...recentTasks.map((task) =>
+                    _buildTaskCard(context, task, model, yellowColor)),
+              ],
+              if (completedTasks.isNotEmpty) ...[
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 16.0, horizontal: 16.0),
+                  child: Text(
+                    'Completed Tasks',
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      color: yellowColor,
+                      fontFamily: 'Montserrat',
+                    ),
+                  ),
+                ),
+                ...completedTasks.map((task) =>
+                    _buildTaskCard(context, task, model, yellowColor)),
+              ],
+            ],
+          );
+        },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -127,9 +110,98 @@ class ListPage extends StatelessWidget {
             builder: (BuildContext context) => AddTaskPage(),
           );
         },
-        backgroundColor: cardColor,
+        backgroundColor:
+            theme.floatingActionButtonTheme.backgroundColor ?? yellowColor,
         shape: const CircleBorder(),
-        child: const Icon(Icons.add, color: Colors.white),
+        child: const Icon(Icons.add),
+      ),
+    );
+  }
+
+  Widget _buildTaskCard(
+      BuildContext context, Task task, TodoModel model, Color yellowColor) {
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+          side: BorderSide(
+            color: yellowColor,
+            width: 2,
+          ),
+        ),
+        elevation: 8,
+        color: isDarkMode ? Colors.black : Colors.white,
+        shadowColor: yellowColor.withOpacity(0.3),
+        child: ListTile(
+          contentPadding:
+              const EdgeInsets.symmetric(vertical: 10.0, horizontal: 16.0),
+          leading: Checkbox(
+            value: task.completed,
+            onChanged: (bool? value) {
+              if (value != null) {
+                model.updateTaskCompletion(task, value);
+              }
+            },
+            activeColor: yellowColor,
+            checkColor: Colors.black,
+          ),
+          title: Text(
+            task.title,
+            style: theme.textTheme.titleMedium?.copyWith(
+              color: isDarkMode ? Colors.white : Colors.black87,
+              fontFamily: 'Ubuntu',
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+              decoration: task.completed
+                  ? TextDecoration.lineThrough
+                  : TextDecoration.none,
+            ),
+          ),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                task.description ?? 'No Description',
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: isDarkMode ? Colors.white70 : Colors.black54,
+                  fontFamily: 'Ubuntu',
+                  decoration: task.completed
+                      ? TextDecoration.lineThrough
+                      : TextDecoration.none,
+                ),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
+              ),
+              const SizedBox(height: 6),
+              Text(
+                'Due Date: ${DateFormat('MMMM dd, yyyy').format(task.dueDate)}',
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: isDarkMode ? Colors.white70 : Colors.black54,
+                  fontFamily: 'Ubuntu',
+                  decoration: task.completed
+                      ? TextDecoration.lineThrough
+                      : TextDecoration.none,
+                ),
+              ),
+            ],
+          ),
+          trailing: Icon(
+            Icons.arrow_forward_ios,
+            color: yellowColor,
+          ),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => TaskDetailPage(task: task),
+              ),
+            );
+          },
+        ),
       ),
     );
   }

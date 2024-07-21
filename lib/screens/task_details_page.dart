@@ -15,7 +15,15 @@ class TaskDetailPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Task Details'),
+        title: const Text(
+          'Task Details',
+          style: TextStyle(
+            fontFamily: 'Montserrat',
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
+        ),
+        backgroundColor: theme.primaryColor,
         actions: [
           IconButton(
             icon: Icon(Icons.edit, color: theme.iconTheme.color),
@@ -26,8 +34,6 @@ class TaskDetailPage extends StatelessWidget {
                   builder: (context) => EditTaskPage(task: task),
                 ),
               );
-              // Force a rebuild to reflect the updated task details
-              // Provider.of<TodoModel>(context, listen: false).notifyListeners();
             },
           ),
           IconButton(
@@ -53,76 +59,92 @@ class TaskDetailPage extends StatelessWidget {
 
           return SingleChildScrollView(
             padding: const EdgeInsets.all(16.0),
-            child: Card(
-              elevation: 8,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: const Color.fromARGB(
+                      255, 250, 205, 126), // Updated border color
+                  width: 2, // Border width
+                ),
+                borderRadius: BorderRadius.circular(16),
               ),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      updatedTask.title,
-                      style: theme.textTheme.titleLarge?.copyWith(
-                        color:
-                            theme.textTheme.titleLarge?.color ?? Colors.black,
-                        fontWeight: FontWeight.bold,
+              child: Card(
+                elevation: 0, // Removed the shadow
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        updatedTask.title,
+                        style: TextStyle(
+                          fontFamily: 'Montserrat',
+                          fontSize: 26,
+                          fontWeight: FontWeight.bold,
+                          color:
+                              theme.textTheme.titleLarge?.color ?? Colors.black,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 12.0),
-                    if (updatedTask.description?.isNotEmpty ?? false) ...[
+                      const SizedBox(height: 16.0),
                       Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Icon(Icons.description, color: theme.iconTheme.color),
+                          Icon(Icons.calendar_today,
+                              color: theme.iconTheme.color),
                           const SizedBox(width: 12.0),
-                          Expanded(
-                            child: Text(
-                              updatedTask.description!,
-                              style: theme.textTheme.bodyMedium?.copyWith(
-                                color: theme.textTheme.bodyMedium?.color ??
-                                    Colors.black87,
-                              ),
+                          Text(
+                            'Due Date: $dueDateFormatted',
+                            style: TextStyle(
+                              fontFamily: 'Ubuntu',
+                              fontSize: 18,
+                              color: theme.textTheme.bodyMedium?.color ??
+                                  Colors.black87,
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 12.0),
-                    ],
-                    Row(
-                      children: [
-                        Icon(Icons.calendar_today,
-                            color: theme.iconTheme.color),
-                        const SizedBox(width: 12.0),
-                        Text(
-                          'Due Date: $dueDateFormatted',
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            color: theme.textTheme.bodyMedium?.color ??
-                                Colors.black87,
-                          ),
+                      const SizedBox(height: 16.0),
+                      if (updatedTask.description?.isNotEmpty ?? false) ...[
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Icon(Icons.description,
+                                color: theme.iconTheme.color),
+                            const SizedBox(width: 12.0),
+                            Expanded(
+                              child: Text(
+                                updatedTask.description!,
+                                style: TextStyle(
+                                  fontFamily: 'Ubuntu',
+                                  fontSize: 18,
+                                  color: theme.textTheme.bodyMedium?.color ??
+                                      Colors.black87,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
-                    ),
-                    const SizedBox(height: 12.0),
-                    Container(
-                      constraints: const BoxConstraints(
-                        minHeight: 550.0,
-                      ),
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Text(
-                          'Created at $createdDateFormatted | Time: $createdTimeFormatted',
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            color: theme.textTheme.bodyMedium?.color ??
-                                Colors.grey,
+                      const SizedBox(height: 60.0),
+                      Container(
+                        padding: const EdgeInsets.symmetric(vertical: 12.0),
+                        child: Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Text(
+                            'Created at $createdDateFormatted | Time: $createdTimeFormatted',
+                            style: TextStyle(
+                              fontFamily: 'Montserrat',
+                              fontSize: 16,
+                              color: theme.textTheme.bodySmall?.color ??
+                                  Colors.grey,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -136,24 +158,35 @@ class TaskDetailPage extends StatelessWidget {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Delete Task'),
-          content: const Text('Are you sure you want to delete this task?'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Cancel'),
+        return Theme(
+          data: ThemeData.light().copyWith(
+            dialogBackgroundColor: const Color.fromARGB(255, 255, 238, 205),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.black,
+              ),
             ),
-            TextButton(
-              onPressed: () {
-                Provider.of<TodoModel>(context, listen: false).removeTask(task);
-                Navigator.of(context).popUntil((route) => route.isFirst);
-              },
-              child: const Text('Delete'),
-            ),
-          ],
+          ),
+          child: AlertDialog(
+            title: const Text('Delete Task'),
+            content: const Text('Are you sure you want to delete this task?'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Provider.of<TodoModel>(context, listen: false)
+                      .removeTask(task);
+                  Navigator.of(context).popUntil((route) => route.isFirst);
+                },
+                child: const Text('Delete'),
+              ),
+            ],
+          ),
         );
       },
     );

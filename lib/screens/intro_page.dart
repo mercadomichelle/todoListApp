@@ -31,9 +31,9 @@ class IntroPage extends StatelessWidget {
                 child: Text(
                   'Manage your tasks seamlessly and boost your productivity with ease.',
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: Colors.black87,
-                        fontSize: 16,
-                      ),
+                      color: Colors.black87,
+                      fontSize: 16,
+                      fontFamily: 'Ubuntu'),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -66,6 +66,7 @@ class IntroPage extends StatelessWidget {
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 20,
+                            fontFamily: 'Ubuntu',
                             fontWeight: FontWeight.bold,
                           ),
                         ),

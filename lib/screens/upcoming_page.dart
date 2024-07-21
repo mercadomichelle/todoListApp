@@ -11,21 +11,20 @@ class UpcomingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDarkMode = theme.brightness == Brightness.dark;
+    final yellowColor = const Color.fromARGB(255, 253, 199, 107);
 
     return Scaffold(
       appBar: AppBar(
         title: Text(
           'UPCOMING',
           style: TextStyle(
-            color: isDarkMode
-                ? const Color.fromARGB(255, 253, 199, 107)
-                : const Color.fromARGB(255, 253, 199, 107),
+            color: yellowColor,
             fontFamily: 'BebasNeue',
             fontSize: 25,
           ),
         ),
-        iconTheme: const IconThemeData(
-          color: Color.fromARGB(255, 253, 199, 107),
+        iconTheme: IconThemeData(
+          color: yellowColor,
         ),
       ),
       drawer: AppDrawer(),
@@ -34,6 +33,30 @@ class UpcomingPage extends StatelessWidget {
           final List<Task> upcomingTasks = model.tasks.where((task) {
             return task.dueDate.isAfter(DateTime.now());
           }).toList();
+
+          if (upcomingTasks.isEmpty) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    'assets/images/no_tasks1.png',
+                    height: 200,
+                    width: 200,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'No upcoming tasks.',
+                    style: theme.textTheme.titleLarge?.copyWith(
+                        color: yellowColor,
+                        fontFamily: 'Montserrat',
+                        fontSize: 20,
+                        fontStyle: FontStyle.italic),
+                  ),
+                ],
+              ),
+            );
+          }
 
           return ListView.builder(
             itemCount: upcomingTasks.length,
@@ -49,22 +72,32 @@ class UpcomingPage extends StatelessWidget {
                 child: Card(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15),
-                    side: const BorderSide(
-                      color: Color.fromARGB(255, 253, 199, 107),
+                    side: BorderSide(
+                      color: yellowColor,
                       width: 2,
                     ),
                   ),
                   elevation: 8,
-                  color: Colors.white,
-                  shadowColor:
-                      Color.fromARGB(255, 253, 199, 107).withOpacity(0.3),
+                  color: isDarkMode ? Colors.black : Colors.white,
+                  shadowColor: yellowColor.withOpacity(0.3),
                   child: ListTile(
                     contentPadding: const EdgeInsets.symmetric(
                         vertical: 10.0, horizontal: 16.0),
+                    leading: Checkbox(
+                      value: task.completed,
+                      onChanged: (bool? value) {
+                        if (value != null) {
+                          model.updateTaskCompletion(task, value);
+                        }
+                      },
+                      activeColor: yellowColor,
+                      checkColor: Colors.black,
+                    ),
                     title: Text(
                       task.title,
                       style: theme.textTheme.titleMedium?.copyWith(
                         color: isDarkMode ? Colors.white : Colors.black87,
+                        fontFamily: 'Ubuntu',
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
                         decoration: task.completed
@@ -79,6 +112,7 @@ class UpcomingPage extends StatelessWidget {
                           description ?? '',
                           style: theme.textTheme.bodyMedium?.copyWith(
                             color: isDarkMode ? Colors.white70 : Colors.black54,
+                            fontFamily: 'Ubuntu',
                             decoration: task.completed
                                 ? TextDecoration.lineThrough
                                 : TextDecoration.none,
@@ -86,18 +120,22 @@ class UpcomingPage extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                           maxLines: 2,
                         ),
-                        SizedBox(height: 4),
+                        const SizedBox(height: 4),
                         Text(
                           'Due Date: ${DateFormat('MMMM dd, yyyy').format(task.dueDate)}',
                           style: theme.textTheme.bodyMedium?.copyWith(
                             color: isDarkMode ? Colors.white70 : Colors.black54,
+                            fontFamily: 'Ubuntu',
+                            decoration: task.completed
+                                ? TextDecoration.lineThrough
+                                : TextDecoration.none,
                           ),
                         ),
                       ],
                     ),
-                    trailing: const Icon(
+                    trailing: Icon(
                       Icons.arrow_forward_ios,
-                      color: Color.fromARGB(255, 253, 199, 107),
+                      color: yellowColor,
                     ),
                     onTap: () {
                       Navigator.push(
@@ -116,15 +154,12 @@ class UpcomingPage extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => AddTaskPage(),
-            ),
+          showDialog(
+            context: context,
+            builder: (BuildContext context) => AddTaskPage(),
           );
         },
-        backgroundColor: theme.floatingActionButtonTheme.backgroundColor ??
-            const Color.fromARGB(255, 253, 199, 107),
+        backgroundColor: yellowColor,
         shape: const CircleBorder(),
         child: const Icon(Icons.add),
       ),

@@ -30,29 +30,25 @@ class _EditTaskPageState extends State<EditTaskPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor:
-          Colors.transparent, // Ensure transparent background for the scaffold
+      backgroundColor: Colors.transparent,
       body: GestureDetector(
         onTap: () => Navigator.of(context).pop(),
         child: Stack(
           children: [
             Positioned.fill(
               child: BackdropFilter(
-                filter: ImageFilter.blur(
-                    sigmaX: 5.0, sigmaY: 5.0), // Adjust the blur effect
+                filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
                 child: Container(
-                  color: Colors.black.withOpacity(
-                      0.5), // Semi-transparent overlay to show blur effect
+                  color: Colors.black.withOpacity(0.5),
                 ),
               ),
             ),
             Center(
               child: Container(
                 constraints: const BoxConstraints(maxWidth: 400),
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(20.0),
                 decoration: BoxDecoration(
-                  color: const Color.fromARGB(
-                      255, 250, 205, 126), // Dialog content background color
+                  color: const Color.fromARGB(255, 250, 205, 126),
                   borderRadius: BorderRadius.circular(20.0),
                 ),
                 child: Form(
@@ -63,22 +59,27 @@ class _EditTaskPageState extends State<EditTaskPage> {
                     children: [
                       TextFormField(
                         controller: _titleController,
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           labelText: 'Title',
-                          labelStyle:
-                              TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
-                          border: OutlineInputBorder(),
+                          labelStyle: TextStyle(
+                              color: Colors.black, fontFamily: 'Ubuntu'),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12.0),
+                          ),
                           enabledBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Color.fromARGB(255, 0, 0, 0)),
+                            borderSide: BorderSide(color: Colors.black),
+                            borderRadius: BorderRadius.circular(12.0),
                           ),
                           focusedBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Color.fromARGB(255, 0, 0, 0)),
+                            borderSide: BorderSide(color: Colors.black),
+                            borderRadius: BorderRadius.circular(12.0),
                           ),
                           filled: true,
                           fillColor: Color.fromARGB(255, 250, 205, 126),
                         ),
+                        style: TextStyle(
+                            color: Colors.black, fontFamily: 'Ubuntu'),
+                        cursorColor: Colors.black,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter a title';
@@ -89,23 +90,28 @@ class _EditTaskPageState extends State<EditTaskPage> {
                       const SizedBox(height: 16),
                       TextFormField(
                         controller: _descriptionController,
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           labelText: 'Description (Optional)',
-                          labelStyle:
-                              TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
-                          border: OutlineInputBorder(),
+                          labelStyle: TextStyle(
+                              color: Colors.black, fontFamily: 'Ubuntu'),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12.0),
+                          ),
                           enabledBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Color.fromARGB(255, 0, 0, 0)),
+                            borderSide: BorderSide(color: Colors.black),
+                            borderRadius: BorderRadius.circular(12.0),
                           ),
                           focusedBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Color.fromARGB(255, 0, 0, 0)),
+                            borderSide: BorderSide(color: Colors.black),
+                            borderRadius: BorderRadius.circular(12.0),
                           ),
                           filled: true,
                           fillColor: Color.fromARGB(255, 250, 205, 126),
                           alignLabelWithHint: true,
                         ),
+                        style: TextStyle(
+                            color: Colors.black, fontFamily: 'Ubuntu'),
+                        cursorColor: Colors.black,
                         maxLines: 8,
                       ),
                       const SizedBox(height: 16),
@@ -125,10 +131,10 @@ class _EditTaskPageState extends State<EditTaskPage> {
                         },
                         style: TextButton.styleFrom(
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5.0),
+                            borderRadius: BorderRadius.circular(12.0),
                           ),
                           side: const BorderSide(
-                            color: Color.fromARGB(255, 0, 0, 0),
+                            color: Colors.black,
                             width: 1,
                           ),
                           padding: const EdgeInsets.symmetric(
@@ -145,21 +151,23 @@ class _EditTaskPageState extends State<EditTaskPage> {
                                 const Text(
                                   'Deadline',
                                   style: TextStyle(
-                                    color: Color.fromARGB(255, 0, 0, 0),
+                                    color: Colors.black,
+                                    fontFamily: 'Ubuntu',
                                   ),
                                 ),
                                 Text(
                                   DateFormat('dd MMMM yyyy').format(_dueDate),
                                   style: const TextStyle(
-                                    color: Color.fromARGB(255, 0, 0, 0),
+                                    color: Colors.black,
                                     fontSize: 16,
+                                    fontFamily: 'Ubuntu',
                                   ),
                                 ),
                               ],
                             ),
                             const Icon(
                               Icons.calendar_today,
-                              color: Color.fromARGB(255, 0, 0, 0),
+                              color: Colors.black,
                             ),
                           ],
                         ),
@@ -185,11 +193,10 @@ class _EditTaskPageState extends State<EditTaskPage> {
                             }
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                const Color.fromARGB(255, 248, 248, 247),
+                            backgroundColor: Colors.white,
                             minimumSize: const Size(300, 60),
                             side: const BorderSide(
-                              color: Color.fromARGB(255, 0, 0, 0),
+                              color: Colors.black,
                             ),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(25.0),
@@ -198,9 +205,10 @@ class _EditTaskPageState extends State<EditTaskPage> {
                           child: const Text(
                             'SAVE CHANGES',
                             style: TextStyle(
-                              color: Color.fromARGB(255, 0, 0, 0),
+                              color: Colors.black,
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
+                              fontFamily: 'Ubuntu',
                             ),
                           ),
                         ),

@@ -10,11 +10,19 @@ import 'screens/intro_page.dart';
 import 'models/todo_model.dart';
 import 'models/theme_model.dart';
 
-void main() {
-  runApp(MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final bool showIntro =
+      await MyApp._isFirstLaunch(); // Use MyApp._isFirstLaunch()
+
+  runApp(MyApp(showIntro: showIntro));
 }
 
 class MyApp extends StatelessWidget {
+  final bool showIntro;
+
+  const MyApp({Key? key, required this.showIntro}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -27,21 +35,9 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           title: 'To-Do App',
           theme: themeModel.currentTheme,
-          initialRoute: '/intro',
+          home: showIntro ? IntroPage() : ListPage(),
           routes: {
-            '/intro': (context) => FutureBuilder<bool>(
-                  future: _isFirstLaunch(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.done) {
-                      return snapshot.data == true ? IntroPage() : ListPage();
-                    } else {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-                  },
-                ),
-            '/': (context) => IntroPage(),
             '/home': (context) => ListPage(),
-            '/all-task': (context) => ListPage(),
             '/today': (context) => TodayPage(),
             '/upcoming': (context) => UpcomingPage(),
             '/stickywall': (context) => StickyWallPage(),
@@ -52,7 +48,7 @@ class MyApp extends StatelessWidget {
     );
   }
 
-  Future<bool> _isFirstLaunch() async {
+  static Future<bool> _isFirstLaunch() async {
     final prefs = await SharedPreferences.getInstance();
     final isFirstLaunch = prefs.getBool('isFirstLaunch') ?? true;
     if (isFirstLaunch) {
