@@ -5,6 +5,8 @@ import 'package:uuid/uuid.dart';
 import 'package:intl/intl.dart';
 
 class AddTaskPage extends StatefulWidget {
+  const AddTaskPage({super.key});
+
   @override
   _AddTaskPageState createState() => _AddTaskPageState();
 }
@@ -35,23 +37,24 @@ class _AddTaskPageState extends State<AddTaskPage> {
                 controller: _titleController,
                 decoration: InputDecoration(
                   labelText: 'Title',
-                  labelStyle:
-                      TextStyle(color: Colors.black, fontFamily: 'Ubuntu'),
+                  labelStyle: const TextStyle(
+                      color: Colors.black, fontFamily: 'Ubuntu'),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12.0),
                   ),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black),
+                    borderSide: const BorderSide(color: Colors.black),
                     borderRadius: BorderRadius.circular(12.0),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black),
+                    borderSide: const BorderSide(color: Colors.black),
                     borderRadius: BorderRadius.circular(12.0),
                   ),
                   filled: true,
-                  fillColor: Color.fromARGB(255, 250, 205, 126),
+                  fillColor: const Color.fromARGB(255, 250, 205, 126),
                 ),
-                style: TextStyle(color: Colors.black, fontFamily: 'Ubuntu'),
+                style:
+                    const TextStyle(color: Colors.black, fontFamily: 'Ubuntu'),
                 cursorColor: Colors.black,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -65,26 +68,27 @@ class _AddTaskPageState extends State<AddTaskPage> {
                 controller: _descriptionController,
                 decoration: InputDecoration(
                   labelText: 'Description (Optional)',
-                  labelStyle:
-                      TextStyle(color: Colors.black, fontFamily: 'Ubuntu'),
+                  labelStyle: const TextStyle(
+                      color: Colors.black, fontFamily: 'Ubuntu'),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12.0),
                   ),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black),
+                    borderSide: const BorderSide(color: Colors.black),
                     borderRadius: BorderRadius.circular(12.0),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black),
+                    borderSide: const BorderSide(color: Colors.black),
                     borderRadius: BorderRadius.circular(15.0),
                   ),
                   filled: true,
-                  fillColor: Color.fromARGB(255, 250, 205, 126),
+                  fillColor: const Color.fromARGB(255, 250, 205, 126),
                   alignLabelWithHint: true,
                 ),
-                style: TextStyle(color: Colors.black, fontFamily: 'Ubuntu'),
+                style:
+                    const TextStyle(color: Colors.black, fontFamily: 'Ubuntu'),
                 cursorColor: Colors.black,
-                maxLines: 8,
+                maxLines: 5,
               ),
               const SizedBox(height: 16),
               TextButton(

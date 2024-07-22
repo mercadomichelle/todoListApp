@@ -62,14 +62,13 @@ class TaskDetailPage extends StatelessWidget {
             child: Container(
               decoration: BoxDecoration(
                 border: Border.all(
-                  color: const Color.fromARGB(
-                      255, 250, 205, 126), // Updated border color
-                  width: 2, // Border width
+                  color: const Color.fromRGBO(250, 205, 126, 1),
+                  width: 2,
                 ),
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Card(
-                elevation: 0, // Removed the shadow
+                elevation: 0,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),

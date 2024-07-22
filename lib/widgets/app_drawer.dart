@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import '../models/theme_model.dart';
 
 class AppDrawer extends StatelessWidget {
+  const AppDrawer({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -48,7 +50,7 @@ class AppDrawer extends StatelessWidget {
                   ),
                   onTap: () {
                     Navigator.pop(context);
-                    Navigator.pushNamed(context, '/all-task');
+                    Navigator.pushNamed(context, '/home');
                   },
                 ),
                 ListTile(

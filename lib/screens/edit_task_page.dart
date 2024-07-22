@@ -61,23 +61,23 @@ class _EditTaskPageState extends State<EditTaskPage> {
                         controller: _titleController,
                         decoration: InputDecoration(
                           labelText: 'Title',
-                          labelStyle: TextStyle(
+                          labelStyle: const TextStyle(
                               color: Colors.black, fontFamily: 'Ubuntu'),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12.0),
                           ),
                           enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black),
+                            borderSide: const BorderSide(color: Colors.black),
                             borderRadius: BorderRadius.circular(12.0),
                           ),
                           focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black),
+                            borderSide: const BorderSide(color: Colors.black),
                             borderRadius: BorderRadius.circular(12.0),
                           ),
                           filled: true,
-                          fillColor: Color.fromARGB(255, 250, 205, 126),
+                          fillColor: const Color.fromARGB(255, 250, 205, 126),
                         ),
-                        style: TextStyle(
+                        style: const TextStyle(
                             color: Colors.black, fontFamily: 'Ubuntu'),
                         cursorColor: Colors.black,
                         validator: (value) {
@@ -92,27 +92,27 @@ class _EditTaskPageState extends State<EditTaskPage> {
                         controller: _descriptionController,
                         decoration: InputDecoration(
                           labelText: 'Description (Optional)',
-                          labelStyle: TextStyle(
+                          labelStyle: const TextStyle(
                               color: Colors.black, fontFamily: 'Ubuntu'),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12.0),
                           ),
                           enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black),
+                            borderSide: const BorderSide(color: Colors.black),
                             borderRadius: BorderRadius.circular(12.0),
                           ),
                           focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black),
+                            borderSide: const BorderSide(color: Colors.black),
                             borderRadius: BorderRadius.circular(12.0),
                           ),
                           filled: true,
-                          fillColor: Color.fromARGB(255, 250, 205, 126),
+                          fillColor: const Color.fromARGB(255, 250, 205, 126),
                           alignLabelWithHint: true,
                         ),
-                        style: TextStyle(
+                        style: const TextStyle(
                             color: Colors.black, fontFamily: 'Ubuntu'),
                         cursorColor: Colors.black,
-                        maxLines: 8,
+                        maxLines: 5,
                       ),
                       const SizedBox(height: 16),
                       TextButton(

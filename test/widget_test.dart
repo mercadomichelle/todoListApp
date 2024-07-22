@@ -1,30 +1,25 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
+import 'package:appdev_proj/screens/lists_page.dart';
+// import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
 import 'package:appdev_proj/main.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+    // Build our app with a valid boolean value for showIntro and trigger a frame.
+    await tester.pumpWidget(MyApp(showIntro: false));
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    // Verify the initial state of the app. For example, if showIntro is false,
+    // ensure that the main page (e.g., ListPage) is displayed.
+    expect(find.byType(ListPage), findsOneWidget);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    // Example assertions to check the initial state. Adjust these based on your app's UI.
+    expect(find.text('Some text on the ListPage'), findsOneWidget);
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    // Example of interacting with the widget if needed (e.g., tapping a button).
+    // await tester.tap(find.byIcon(Icons.add));
+    // await tester.pump();
+
+    // Example of verifying changes or interactions.
+    // expect(find.text('Updated text'), findsOneWidget);
   });
 }

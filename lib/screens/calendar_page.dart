@@ -4,6 +4,8 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:appdev_proj/models/todo_model.dart';
 
 class CalendarPage extends StatefulWidget {
+  const CalendarPage({super.key});
+
   @override
   _CalendarPageState createState() => _CalendarPageState();
 }
@@ -17,7 +19,7 @@ class _CalendarPageState extends State<CalendarPage> {
   @override
   Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
-    final primaryColor = const Color.fromARGB(255, 250, 205, 126);
+    const primaryColor = Color.fromARGB(255, 250, 205, 126);
     final textColor =
         brightness == Brightness.dark ? Colors.white : Colors.black;
 
@@ -82,7 +84,7 @@ class _CalendarPageState extends State<CalendarPage> {
                           }).toList();
                         },
                         calendarStyle: CalendarStyle(
-                          todayDecoration: BoxDecoration(
+                          todayDecoration: const BoxDecoration(
                             color: primaryColor,
                             shape: BoxShape.circle,
                           ),
@@ -103,7 +105,7 @@ class _CalendarPageState extends State<CalendarPage> {
                             color: textColor,
                           ),
                         ),
-                        headerStyle: HeaderStyle(
+                        headerStyle: const HeaderStyle(
                           titleTextStyle: TextStyle(
                             color: primaryColor,
                             fontSize: 20,

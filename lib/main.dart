@@ -21,7 +21,7 @@ void main() async {
 class MyApp extends StatelessWidget {
   final bool showIntro;
 
-  const MyApp({Key? key, required this.showIntro}) : super(key: key);
+  const MyApp({super.key, required this.showIntro});
 
   @override
   Widget build(BuildContext context) {
@@ -35,13 +35,13 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           title: 'To-Do App',
           theme: themeModel.currentTheme,
-          home: showIntro ? IntroPage() : ListPage(),
+          home: showIntro ? const IntroPage() : const ListPage(),
           routes: {
-            '/home': (context) => ListPage(),
-            '/today': (context) => TodayPage(),
-            '/upcoming': (context) => UpcomingPage(),
-            '/stickywall': (context) => StickyWallPage(),
-            '/calendar': (context) => CalendarPage(),
+            '/home': (context) => const ListPage(),
+            '/today': (context) => const TodayPage(),
+            '/upcoming': (context) => const UpcomingPage(),
+            '/stickywall': (context) => const StickyWallPage(),
+            '/calendar': (context) => const CalendarPage(),
           },
         ),
       ),

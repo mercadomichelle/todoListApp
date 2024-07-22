@@ -7,15 +7,17 @@ import 'package:appdev_proj/widgets/app_drawer.dart';
 import 'package:intl/intl.dart';
 
 class TodayPage extends StatelessWidget {
+  const TodayPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDarkMode = theme.brightness == Brightness.dark;
-    final yellowColor = const Color.fromARGB(255, 253, 199, 107);
+    const yellowColor = Color.fromARGB(255, 253, 199, 107);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'TODAY',
           style: TextStyle(
             color: yellowColor,
@@ -23,11 +25,11 @@ class TodayPage extends StatelessWidget {
             fontSize: 25,
           ),
         ),
-        iconTheme: IconThemeData(
+        iconTheme: const IconThemeData(
           color: yellowColor,
         ),
       ),
-      drawer: AppDrawer(),
+      drawer: const AppDrawer(),
       body: Consumer<TodoModel>(
         builder: (context, model, child) {
           final List<Task> todayTasks = model.tasks.where((task) {
@@ -75,7 +77,7 @@ class TodayPage extends StatelessWidget {
                 child: Card(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15),
-                    side: BorderSide(
+                    side: const BorderSide(
                       color: yellowColor,
                       width: 2,
                     ),
@@ -136,7 +138,7 @@ class TodayPage extends StatelessWidget {
                         ),
                       ],
                     ),
-                    trailing: Icon(
+                    trailing: const Icon(
                       Icons.arrow_forward_ios,
                       color: yellowColor,
                     ),

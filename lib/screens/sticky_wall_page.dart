@@ -3,6 +3,8 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:intl/intl.dart';
 
 class StickyWallPage extends StatefulWidget {
+  const StickyWallPage({super.key});
+
   @override
   _StickyWallPageState createState() => _StickyWallPageState();
 }
@@ -144,7 +146,8 @@ class _StickyWallPageState extends State<StickyWallPage> {
                 const Text('Edit Note', style: TextStyle(fontFamily: 'Ubuntu')),
             content: Container(
               constraints: const BoxConstraints(
-                maxWidth: 400,
+                minWidth: 300,
+                maxWidth: 300,
               ),
               child: Form(
                 key: formKey,

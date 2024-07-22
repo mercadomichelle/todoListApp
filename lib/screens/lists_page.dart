@@ -9,14 +9,16 @@ import 'package:intl/intl.dart';
 class ListPage extends StatelessWidget {
   static const routeName = '/list';
 
+  const ListPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final yellowColor = const Color.fromARGB(255, 253, 199, 107);
+    const yellowColor = Color.fromARGB(255, 253, 199, 107);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'TASKS',
           style: TextStyle(
             color: yellowColor,
@@ -24,15 +26,15 @@ class ListPage extends StatelessWidget {
             fontSize: 25,
           ),
         ),
-        iconTheme: IconThemeData(
+        iconTheme: const IconThemeData(
           color: yellowColor,
         ),
       ),
-      drawer: AppDrawer(),
+      drawer: const AppDrawer(),
       body: Consumer<TodoModel>(
         builder: (context, model, child) {
           if (model.isLoading) {
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(
                 valueColor: AlwaysStoppedAnimation<Color>(yellowColor),
               ),
