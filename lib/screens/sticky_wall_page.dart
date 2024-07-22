@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import '../models/todo_model.dart';
 
 class StickyWallPage extends StatefulWidget {
-  const StickyWallPage({super.key});
-
   @override
   _StickyWallPageState createState() => _StickyWallPageState();
 }
 
 class _StickyWallPageState extends State<StickyWallPage> {
-  final List<Map<String, String?>> notes = [];
   final List<Color> colors = [
     Colors.yellow,
     Colors.pink,
@@ -94,15 +93,15 @@ class _StickyWallPageState extends State<StickyWallPage> {
               TextButton(
                 onPressed: () {
                   if (formKey.currentState!.validate()) {
-                    String timestamp =
-                        DateFormat('EEE MMM dd kk:mm').format(DateTime.now());
-                    setState(() {
-                      notes.add({
-                        'title': title,
-                        'content': content,
-                        'timestamp': timestamp,
-                      });
-                    });
+                    final task = Task(
+                      id: DateTime.now().toString(),
+                      title: title,
+                      description: content,
+                      dueDate: DateTime.now(),
+                      creationDate: DateTime.now(),
+                    );
+                    Provider.of<TodoModel>(context, listen: false)
+                        .addTask(task);
                     Navigator.of(context).pop();
                   }
                 },
@@ -116,9 +115,9 @@ class _StickyWallPageState extends State<StickyWallPage> {
     );
   }
 
-  void _editNote(int index) {
-    String title = notes[index]['title']!;
-    String? content = notes[index]['content'];
+  void _editNote(Task task) {
+    String title = task.title;
+    String? content = task.description;
     final formKey = GlobalKey<FormState>();
 
     showDialog(
@@ -146,8 +145,7 @@ class _StickyWallPageState extends State<StickyWallPage> {
                 const Text('Edit Note', style: TextStyle(fontFamily: 'Ubuntu')),
             content: Container(
               constraints: const BoxConstraints(
-                minWidth: 300,
-                maxWidth: 300,
+                maxWidth: 400,
               ),
               child: Form(
                 key: formKey,
@@ -195,15 +193,16 @@ class _StickyWallPageState extends State<StickyWallPage> {
               TextButton(
                 onPressed: () {
                   if (formKey.currentState!.validate()) {
-                    String timestamp =
-                        DateFormat('EEE MMM dd kk:mm').format(DateTime.now());
-                    setState(() {
-                      notes[index] = {
-                        'title': title,
-                        'content': content,
-                        'timestamp': timestamp,
-                      };
-                    });
+                    final newTask = Task(
+                      id: task.id,
+                      title: title,
+                      description: content,
+                      dueDate: task.dueDate,
+                      creationDate: task.creationDate,
+                      completed: task.completed,
+                    );
+                    Provider.of<TodoModel>(context, listen: false)
+                        .updateTask(task, newTask);
                     Navigator.of(context).pop();
                   }
                 },
@@ -217,7 +216,7 @@ class _StickyWallPageState extends State<StickyWallPage> {
     );
   }
 
-  void _deleteNote(int index) {
+  void _deleteNote(Task task) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -253,9 +252,8 @@ class _StickyWallPageState extends State<StickyWallPage> {
               ),
               TextButton(
                 onPressed: () {
-                  setState(() {
-                    notes.removeAt(index);
-                  });
+                  Provider.of<TodoModel>(context, listen: false)
+                      .removeTask(task);
                   Navigator.of(context).pop();
                 },
                 child: const Text('Delete',
@@ -272,10 +270,10 @@ class _StickyWallPageState extends State<StickyWallPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDarkMode = theme.brightness == Brightness.dark;
-
-    final backgroundColor = isDarkMode ? Colors.black : Colors.white70;
+    final backgroundColor =
+        isDarkMode ? Colors.black : Color.fromARGB(255, 245, 245, 245);
     final textColor =
-        isDarkMode ? const Color.fromARGB(255, 0, 0, 0) : Colors.black;
+        isDarkMode ? const Color.fromARGB(255, 255, 255, 255) : Colors.black;
     const yellowColor = Color.fromARGB(255, 253, 199, 107);
 
     return Scaffold(
@@ -295,23 +293,31 @@ class _StickyWallPageState extends State<StickyWallPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: StaggeredGridView.countBuilder(
-          crossAxisCount: 4,
-          itemCount: notes.length,
-          itemBuilder: (BuildContext context, int index) => GestureDetector(
-            onTap: () => _editNote(index),
-            onLongPress: () => _deleteNote(index),
-            child: NoteTile(
-              title: notes[index]['title']!,
-              content: notes[index]['content'],
-              timestamp: notes[index]['timestamp']!,
-              color: colors[index % colors.length],
-              textColor: textColor,
-            ),
-          ),
-          staggeredTileBuilder: (int index) => const StaggeredTile.fit(2),
-          mainAxisSpacing: 8.0,
-          crossAxisSpacing: 8.0,
+        child: Consumer<TodoModel>(
+          builder: (context, todoModel, child) {
+            return StaggeredGridView.countBuilder(
+              crossAxisCount: 4,
+              itemCount: todoModel.tasks.length,
+              itemBuilder: (BuildContext context, int index) {
+                final task = todoModel.tasks[index];
+                return GestureDetector(
+                  onTap: () => _editNote(task),
+                  onLongPress: () => _deleteNote(task),
+                  child: NoteTile(
+                    title: task.title,
+                    content: task.description,
+                    timestamp: DateFormat('EEE MMM dd kk:mm')
+                        .format(task.creationDate),
+                    color: colors[index % colors.length],
+                    textColor: textColor,
+                  ),
+                );
+              },
+              staggeredTileBuilder: (int index) => const StaggeredTile.fit(2),
+              mainAxisSpacing: 8.0,
+              crossAxisSpacing: 8.0,
+            );
+          },
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -355,19 +361,21 @@ class NoteTile extends StatelessWidget {
           Text(
             title,
             style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: textColor,
-                fontFamily: 'Ubuntu'),
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: textColor,
+              fontFamily: 'Ubuntu',
+            ),
           ),
           if (content != null && content!.isNotEmpty) ...[
             const SizedBox(height: 8),
             Text(
               content!,
               style: TextStyle(
-                  fontSize: 16,
-                  color: textColor.withOpacity(0.87),
-                  fontFamily: 'Ubuntu'),
+                fontSize: 16,
+                color: textColor.withOpacity(0.87),
+                fontFamily: 'Ubuntu',
+              ),
             ),
           ],
           const SizedBox(height: 10),
