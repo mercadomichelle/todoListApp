@@ -323,7 +323,7 @@ class _CalendarPageState extends State<CalendarPage> {
                 style: TextStyle(
                   color: brightness == Brightness.dark
                       ? const Color.fromARGB(255, 0, 0, 0)
-                      : primaryColor,
+                      : Color.fromARGB(255, 0, 0, 0),
                 ),
               ),
             ),
