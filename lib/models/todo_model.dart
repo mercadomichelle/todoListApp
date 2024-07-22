@@ -9,6 +9,7 @@ class Task {
   DateTime dueDate;
   final DateTime creationDate;
   bool completed;
+  int priority;
 
   Task({
     required this.id,
@@ -17,6 +18,7 @@ class Task {
     required this.dueDate,
     required this.creationDate,
     this.completed = false,
+    this.priority = 1,
   });
 
   Map<String, dynamic> toJson() {
@@ -27,6 +29,7 @@ class Task {
       'dueDate': dueDate.toIso8601String(),
       'creationDate': creationDate.toIso8601String(),
       'completed': completed,
+      'priority': priority,
     };
   }
 
@@ -38,8 +41,16 @@ class Task {
       dueDate: DateTime.parse(json['dueDate']),
       creationDate: DateTime.parse(json['creationDate']),
       completed: json['completed'],
+      priority: json['priority'] ?? 1,
     );
   }
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Task && runtimeType == other.runtimeType && id == other.id;
+
+  @override
+  int get hashCode => id.hashCode;
 }
 
 class TodoModel extends ChangeNotifier {
@@ -51,12 +62,14 @@ class TodoModel extends ChangeNotifier {
 
   void addTask(Task task) {
     _tasks.add(task);
+    _sortTasksByPriority();
     saveTasks();
     notifyListeners();
   }
 
   void removeTask(Task task) {
     _tasks.remove(task);
+    _sortTasksByPriority();
     saveTasks();
     notifyListeners();
   }
@@ -65,6 +78,7 @@ class TodoModel extends ChangeNotifier {
     final index = _tasks.indexWhere((task) => task.id == oldTask.id);
     if (index != -1) {
       _tasks[index] = newTask;
+      _sortTasksByPriority();
       saveTasks();
       notifyListeners();
     }
@@ -74,9 +88,14 @@ class TodoModel extends ChangeNotifier {
     final index = _tasks.indexWhere((t) => t.id == task.id);
     if (index != -1) {
       _tasks[index].completed = completed;
+      _sortTasksByPriority();
       saveTasks();
       notifyListeners();
     }
+  }
+
+  void _sortTasksByPriority() {
+    _tasks.sort((a, b) => b.priority.compareTo(a.priority));
   }
 
   List<Task> get recentTasks {

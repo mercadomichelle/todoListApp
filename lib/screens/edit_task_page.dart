@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+// import 'package:provider/provider.dart';
 import 'package:appdev_proj/models/todo_model.dart';
 import 'package:intl/intl.dart';
 import 'dart:ui';
@@ -18,6 +18,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
   final _descriptionController = TextEditingController();
   late DateTime _dueDate;
   final _formKey = GlobalKey<FormState>();
+  int _selectedPriority = 1;
 
   @override
   void initState() {
@@ -25,6 +26,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
     _titleController.text = widget.task.title;
     _descriptionController.text = widget.task.description ?? '';
     _dueDate = widget.task.dueDate;
+    _selectedPriority = widget.task.priority;
   }
 
   @override
@@ -122,6 +124,24 @@ class _EditTaskPageState extends State<EditTaskPage> {
                             initialDate: _dueDate,
                             firstDate: DateTime(2000),
                             lastDate: DateTime(2101),
+                            builder: (context, child) {
+                              return Theme(
+                                data: ThemeData.light().copyWith(
+                                  colorScheme: const ColorScheme.light(
+                                    primary: Color.fromARGB(255, 250, 205, 126),
+                                    onPrimary: Colors.black,
+                                    onSurface: Colors.black,
+                                  ),
+                                  textButtonTheme: TextButtonThemeData(
+                                    style: TextButton.styleFrom(
+                                      foregroundColor: Colors.black,
+                                    ),
+                                  ),
+                                  dialogBackgroundColor: Colors.white,
+                                ),
+                                child: child!,
+                              );
+                            },
                           );
                           if (pickedDate != null && pickedDate != _dueDate) {
                             setState(() {
@@ -172,6 +192,68 @@ class _EditTaskPageState extends State<EditTaskPage> {
                           ],
                         ),
                       ),
+                      const SizedBox(height: 16),
+                      DropdownButtonFormField<int>(
+                        value: _selectedPriority,
+                        decoration: InputDecoration(
+                          labelText: 'Priority',
+                          labelStyle: const TextStyle(
+                              color: Colors.black, fontFamily: 'Ubuntu'),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12.0),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(color: Colors.black),
+                            borderRadius: BorderRadius.circular(12.0),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(color: Colors.black),
+                            borderRadius: BorderRadius.circular(12.0),
+                          ),
+                          filled: true,
+                          fillColor: const Color.fromARGB(255, 250, 205, 126),
+                        ),
+                        items: const [
+                          DropdownMenuItem(
+                            value: 1,
+                            child: Text(
+                              'Low',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 16,
+                                fontFamily: 'Ubuntu',
+                              ),
+                            ),
+                          ),
+                          DropdownMenuItem(
+                            value: 2,
+                            child: Text(
+                              'Medium',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 16,
+                                fontFamily: 'Ubuntu',
+                              ),
+                            ),
+                          ),
+                          DropdownMenuItem(
+                            value: 3,
+                            child: Text(
+                              'High',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 16,
+                                fontFamily: 'Ubuntu',
+                              ),
+                            ),
+                          ),
+                        ],
+                        onChanged: (value) {
+                          setState(() {
+                            _selectedPriority = value ?? 1;
+                          });
+                        },
+                      ),
                       const SizedBox(height: 40),
                       Center(
                         child: ElevatedButton(
@@ -185,10 +267,9 @@ class _EditTaskPageState extends State<EditTaskPage> {
                                         ? _descriptionController.text
                                         : null,
                                 dueDate: _dueDate,
-                                creationDate: DateTime.now(),
+                                creationDate: widget.task.creationDate,
+                                priority: _selectedPriority,
                               );
-                              Provider.of<TodoModel>(context, listen: false)
-                                  .updateTask(widget.task, updatedTask);
                               Navigator.pop(context, updatedTask);
                             }
                           },

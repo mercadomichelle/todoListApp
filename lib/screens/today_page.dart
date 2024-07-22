@@ -32,13 +32,22 @@ class TodayPage extends StatelessWidget {
       drawer: const AppDrawer(),
       body: Consumer<TodoModel>(
         builder: (context, model, child) {
+          final DateTime today = DateTime.now();
           final List<Task> todayTasks = model.tasks.where((task) {
-            return task.dueDate.year == DateTime.now().year &&
-                task.dueDate.month == DateTime.now().month &&
-                task.dueDate.day == DateTime.now().day;
+            return !task.completed &&
+                task.dueDate.year == today.year &&
+                task.dueDate.month == today.month &&
+                task.dueDate.day == today.day;
           }).toList();
 
-          if (todayTasks.isEmpty) {
+          final List<Task> completedTasks = model.completedTasks
+              .where((task) =>
+                  task.dueDate.year == today.year &&
+                  task.dueDate.month == today.month &&
+                  task.dueDate.day == today.day)
+              .toList();
+
+          if (todayTasks.isEmpty && completedTasks.isEmpty) {
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -63,97 +72,39 @@ class TodayPage extends StatelessWidget {
             );
           }
 
-          return ListView.builder(
-            itemCount: todayTasks.length,
-            itemBuilder: (context, index) {
-              final task = todayTasks[index];
-              final description = task.description?.isNotEmpty ?? false
-                  ? task.description
-                  : 'No Description';
-
-              return Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-                child: Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
-                    side: const BorderSide(
+          return ListView(
+            children: [
+              if (todayTasks.isNotEmpty) ...[
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 16.0, horizontal: 16.0),
+                  child: Text(
+                    'Today\'s Tasks',
+                    style: theme.textTheme.titleLarge?.copyWith(
                       color: yellowColor,
-                      width: 2,
+                      fontFamily: 'Montserrat',
                     ),
-                  ),
-                  elevation: 8,
-                  color: isDarkMode ? Colors.black : Colors.white,
-                  shadowColor: yellowColor.withOpacity(0.3),
-                  child: ListTile(
-                    contentPadding: const EdgeInsets.symmetric(
-                        vertical: 10.0, horizontal: 16.0),
-                    leading: Checkbox(
-                      value: task.completed,
-                      onChanged: (bool? value) {
-                        if (value != null) {
-                          model.updateTaskCompletion(task, value);
-                        }
-                      },
-                      activeColor: yellowColor,
-                      checkColor: Colors.black,
-                    ),
-                    title: Text(
-                      task.title,
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        color: isDarkMode ? Colors.white : Colors.black87,
-                        fontFamily: 'Ubuntu',
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                        decoration: task.completed
-                            ? TextDecoration.lineThrough
-                            : TextDecoration.none,
-                      ),
-                    ),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          description ?? '',
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            color: isDarkMode ? Colors.white70 : Colors.black54,
-                            fontFamily: 'Ubuntu',
-                            decoration: task.completed
-                                ? TextDecoration.lineThrough
-                                : TextDecoration.none,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 2,
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          'Due Date: ${DateFormat('MMMM dd, yyyy').format(task.dueDate)}',
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            color: isDarkMode ? Colors.white70 : Colors.black54,
-                            fontFamily: 'Ubuntu',
-                            decoration: task.completed
-                                ? TextDecoration.lineThrough
-                                : TextDecoration.none,
-                          ),
-                        ),
-                      ],
-                    ),
-                    trailing: const Icon(
-                      Icons.arrow_forward_ios,
-                      color: yellowColor,
-                    ),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => TaskDetailPage(task: task),
-                        ),
-                      );
-                    },
                   ),
                 ),
-              );
-            },
+                ...todayTasks.map((task) => _buildTaskCard(
+                    context, task, model, yellowColor, isDarkMode)),
+              ],
+              if (completedTasks.isNotEmpty) ...[
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 16.0, horizontal: 16.0),
+                  child: Text(
+                    'Completed Tasks',
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      color: yellowColor,
+                      fontFamily: 'Montserrat',
+                    ),
+                  ),
+                ),
+                ...completedTasks.map((task) => _buildTaskCard(
+                    context, task, model, yellowColor, isDarkMode)),
+              ],
+            ],
           );
         },
       ),
@@ -161,12 +112,110 @@ class TodayPage extends StatelessWidget {
         onPressed: () {
           showDialog(
             context: context,
-            builder: (BuildContext context) => AddTaskPage(),
+            builder: (BuildContext context) => const AddTaskPage(),
           );
         },
         backgroundColor: yellowColor,
         shape: const CircleBorder(),
         child: const Icon(Icons.add),
+      ),
+    );
+  }
+
+  Widget _buildTaskCard(BuildContext context, Task task, TodoModel model,
+      Color yellowColor, bool isDarkMode) {
+    Color priorityColor;
+    switch (task.priority) {
+      case 3:
+        priorityColor = Colors.red;
+        break;
+      case 2:
+        priorityColor = Colors.orange;
+        break;
+      default:
+        priorityColor = Colors.green;
+        break;
+    }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+          side: BorderSide(
+            color: priorityColor,
+            width: 2,
+          ),
+        ),
+        elevation: 8,
+        color: isDarkMode ? Colors.black : Colors.white,
+        shadowColor: priorityColor.withOpacity(0.3),
+        child: ListTile(
+          contentPadding:
+              const EdgeInsets.symmetric(vertical: 10.0, horizontal: 16.0),
+          leading: Checkbox(
+            value: task.completed,
+            onChanged: (bool? value) {
+              if (value != null) {
+                model.updateTaskCompletion(task, value);
+              }
+            },
+            activeColor: priorityColor,
+            checkColor: Colors.black,
+          ),
+          title: Text(
+            task.title,
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  color: isDarkMode ? Colors.white : Colors.black87,
+                  fontFamily: 'Ubuntu',
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                  decoration: task.completed
+                      ? TextDecoration.lineThrough
+                      : TextDecoration.none,
+                ),
+          ),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                task.description ?? 'No Description',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: isDarkMode ? Colors.white70 : Colors.black54,
+                      fontFamily: 'Ubuntu',
+                      decoration: task.completed
+                          ? TextDecoration.lineThrough
+                          : TextDecoration.none,
+                    ),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
+              ),
+              const SizedBox(height: 4),
+              Text(
+                'Due Date: ${DateFormat('MMMM dd, yyyy').format(task.dueDate)}',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: isDarkMode ? Colors.white70 : Colors.black54,
+                      fontFamily: 'Ubuntu',
+                      decoration: task.completed
+                          ? TextDecoration.lineThrough
+                          : TextDecoration.none,
+                    ),
+              ),
+            ],
+          ),
+          trailing: const Icon(
+            Icons.arrow_forward_ios,
+            color: Color.fromARGB(255, 253, 199, 107),
+          ),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => TaskDetailPage(task: task),
+              ),
+            );
+          },
+        ),
       ),
     );
   }

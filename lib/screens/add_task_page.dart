@@ -16,6 +16,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
   final _descriptionController = TextEditingController();
   DateTime _dueDate = DateTime.now();
   final _formKey = GlobalKey<FormState>();
+  int _selectedPriority = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -163,6 +164,38 @@ class _AddTaskPageState extends State<AddTaskPage> {
                   ],
                 ),
               ),
+              const SizedBox(height: 16),
+              DropdownButtonFormField<int>(
+                value: _selectedPriority,
+                decoration: InputDecoration(
+                  labelText: 'Priority',
+                  labelStyle: const TextStyle(
+                      color: Colors.black, fontFamily: 'Ubuntu'),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12.0),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(color: Colors.black),
+                    borderRadius: BorderRadius.circular(12.0),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(color: Colors.black),
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                  filled: true,
+                  fillColor: const Color.fromARGB(255, 250, 205, 126),
+                ),
+                items: const [
+                  DropdownMenuItem(value: 1, child: Text('Low')),
+                  DropdownMenuItem(value: 2, child: Text('Medium')),
+                  DropdownMenuItem(value: 3, child: Text('High')),
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    _selectedPriority = value ?? 1;
+                  });
+                },
+              ),
               const SizedBox(height: 40),
               Center(
                 child: ElevatedButton(
@@ -176,6 +209,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                             : null,
                         dueDate: _dueDate,
                         creationDate: DateTime.now(),
+                        priority: _selectedPriority,
                       );
                       Provider.of<TodoModel>(context, listen: false)
                           .addTask(newTask);

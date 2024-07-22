@@ -295,11 +295,13 @@ class _StickyWallPageState extends State<StickyWallPage> {
         padding: const EdgeInsets.all(8.0),
         child: Consumer<TodoModel>(
           builder: (context, todoModel, child) {
+            final activeTasks =
+                todoModel.tasks.where((task) => !task.completed).toList();
             return StaggeredGridView.countBuilder(
               crossAxisCount: 4,
-              itemCount: todoModel.tasks.length,
+              itemCount: activeTasks.length,
               itemBuilder: (BuildContext context, int index) {
-                final task = todoModel.tasks[index];
+                final task = activeTasks[index];
                 return GestureDetector(
                   onTap: () => _editNote(task),
                   onLongPress: () => _deleteNote(task),

@@ -13,27 +13,34 @@ class TaskDetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
+    switch (task.priority) {
+      case 3:
+        break;
+      case 2:
+        break;
+      default:
+        break;
+    }
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Task Details',
-          style: TextStyle(
-            fontFamily: 'Montserrat',
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-          ),
-        ),
+        title: const Text('Task Details'),
         backgroundColor: theme.primaryColor,
         actions: [
           IconButton(
             icon: Icon(Icons.edit, color: theme.iconTheme.color),
             onPressed: () async {
-              await Navigator.push(
+              final updatedTask = await Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => EditTaskPage(task: task),
                 ),
               );
+              if (updatedTask != null) {
+                // Update task in the model
+                Provider.of<TodoModel>(context, listen: false)
+                    .updateTask(task, updatedTask);
+              }
             },
           ),
           IconButton(
@@ -57,14 +64,25 @@ class TaskDetailPage extends StatelessWidget {
           final createdTimeFormatted =
               DateFormat('HH:mm').format(updatedTask.creationDate);
 
+          // Update priority color
+          Color priorityColor;
+          switch (updatedTask.priority) {
+            case 3:
+              priorityColor = Colors.red;
+              break;
+            case 2:
+              priorityColor = Colors.orange;
+              break;
+            default:
+              priorityColor = Colors.green;
+              break;
+          }
+
           return SingleChildScrollView(
             padding: const EdgeInsets.all(16.0),
             child: Container(
               decoration: BoxDecoration(
-                border: Border.all(
-                  color: const Color.fromRGBO(250, 205, 126, 1),
-                  width: 2,
-                ),
+                border: Border.all(color: priorityColor, width: 2),
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Card(
@@ -161,9 +179,7 @@ class TaskDetailPage extends StatelessWidget {
           data: ThemeData.light().copyWith(
             dialogBackgroundColor: const Color.fromARGB(255, 255, 238, 205),
             textButtonTheme: TextButtonThemeData(
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.black,
-              ),
+              style: TextButton.styleFrom(foregroundColor: Colors.black),
             ),
           ),
           child: AlertDialog(

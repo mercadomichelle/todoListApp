@@ -109,7 +109,7 @@ class ListPage extends StatelessWidget {
         onPressed: () {
           showDialog(
             context: context,
-            builder: (BuildContext context) => AddTaskPage(),
+            builder: (BuildContext context) => const AddTaskPage(),
           );
         },
         backgroundColor:
@@ -125,19 +125,32 @@ class ListPage extends StatelessWidget {
     final theme = Theme.of(context);
     final isDarkMode = theme.brightness == Brightness.dark;
 
+    Color priorityColor;
+    switch (task.priority) {
+      case 3:
+        priorityColor = Colors.red;
+        break;
+      case 2:
+        priorityColor = Colors.orange;
+        break;
+      default:
+        priorityColor = Colors.green;
+        break;
+    }
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15),
           side: BorderSide(
-            color: yellowColor,
+            color: priorityColor,
             width: 2,
           ),
         ),
         elevation: 8,
         color: isDarkMode ? Colors.black : Colors.white,
-        shadowColor: yellowColor.withOpacity(0.3),
+        shadowColor: priorityColor.withOpacity(0.3),
         child: ListTile(
           contentPadding:
               const EdgeInsets.symmetric(vertical: 10.0, horizontal: 16.0),
@@ -148,7 +161,7 @@ class ListPage extends StatelessWidget {
                 model.updateTaskCompletion(task, value);
               }
             },
-            activeColor: yellowColor,
+            activeColor: priorityColor,
             checkColor: Colors.black,
           ),
           title: Text(
@@ -189,11 +202,23 @@ class ListPage extends StatelessWidget {
                       : TextDecoration.none,
                 ),
               ),
+              const SizedBox(height: 6),
+              Text(
+                'Priority: ${_priorityText(task.priority)}',
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: priorityColor,
+                  fontFamily: 'Ubuntu',
+                  fontWeight: FontWeight.bold,
+                  decoration: task.completed
+                      ? TextDecoration.lineThrough
+                      : TextDecoration.none,
+                ),
+              ),
             ],
           ),
           trailing: Icon(
             Icons.arrow_forward_ios,
-            color: yellowColor,
+            color: priorityColor,
           ),
           onTap: () {
             Navigator.push(
@@ -206,5 +231,16 @@ class ListPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String _priorityText(int priority) {
+    switch (priority) {
+      case 3:
+        return 'High';
+      case 2:
+        return 'Medium';
+      default:
+        return 'Low';
+    }
   }
 }
