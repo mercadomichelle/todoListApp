@@ -12,22 +12,26 @@ import 'models/theme_model.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final bool showIntro =
-      await MyApp._isFirstLaunch(); // Use MyApp._isFirstLaunch()
+  final bool showIntro = await MyApp._isFirstLaunch();
 
-  runApp(MyApp(showIntro: showIntro));
+  // Initialize TodoModel and fetch tasks
+  final todoModel = TodoModel();
+  await todoModel.fetchTasks();
+
+  runApp(MyApp(showIntro: showIntro, todoModel: todoModel));
 }
 
 class MyApp extends StatelessWidget {
   final bool showIntro;
+  final TodoModel todoModel;
 
-  const MyApp({super.key, required this.showIntro});
+  const MyApp({super.key, required this.showIntro, required this.todoModel});
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => TodoModel()),
+        ChangeNotifierProvider(create: (_) => todoModel),
         ChangeNotifierProvider(create: (_) => ThemeModel()),
       ],
       child: Consumer<ThemeModel>(
@@ -40,7 +44,7 @@ class MyApp extends StatelessWidget {
             '/home': (context) => const ListPage(),
             '/today': (context) => const TodayPage(),
             '/upcoming': (context) => const UpcomingPage(),
-            '/stickywall': (context) => const StickyWallPage(),
+            '/stickywall': (context) => StickyWallPage(),
             '/calendar': (context) => const CalendarPage(),
           },
         ),
