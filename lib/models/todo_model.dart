@@ -10,7 +10,7 @@ class Task {
   final DateTime creationDate;
   bool completed;
   int priority;
-  final String type; // New field to specify the type of task
+  final String type;
 
   Task({
     required this.id,
@@ -20,7 +20,7 @@ class Task {
     required this.creationDate,
     this.completed = false,
     this.priority = 1,
-    this.type = 'generalTask', // Default type
+    this.type = 'generalTask',
   });
 
   Map<String, dynamic> toJson() {
@@ -32,7 +32,7 @@ class Task {
       'creationDate': creationDate.toIso8601String(),
       'completed': completed,
       'priority': priority,
-      'type': type, // Include type in JSON serialization
+      'type': type,
     };
   }
 
@@ -45,7 +45,7 @@ class Task {
       creationDate: DateTime.parse(json['creationDate']),
       completed: json['completed'],
       priority: json['priority'] ?? 1,
-      type: json['type'] ?? 'generalTask', // Default type
+      type: json['type'] ?? 'generalTask',
     );
   }
 
@@ -102,6 +102,7 @@ class TodoModel extends ChangeNotifier {
         priority: task.priority,
         type: task.type,
       );
+      saveTasks();
       notifyListeners();
     }
   }
@@ -110,7 +111,6 @@ class TodoModel extends ChangeNotifier {
     _tasks.sort((a, b) => b.priority.compareTo(a.priority));
   }
 
-// New method to differentiate task types
   void addStickyNoteTask(Task task) {
     if (task.type == 'stickyNote') {
       _tasks.add(task);
@@ -121,10 +121,24 @@ class TodoModel extends ChangeNotifier {
   }
 
   List<Task> get recentTasks {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+
     return _tasks
-        .where((task) => !task.completed && task.type == 'generalTask')
+        .where((task) =>
+            (task.dueDate.isAfter(today) ||
+                (task.dueDate.year == today.year &&
+                    task.dueDate.month == today.month &&
+                    task.dueDate.day == today.day)) &&
+            !task.completed &&
+            task.type == 'generalTask')
         .toList()
-      ..sort((a, b) => b.creationDate.compareTo(a.creationDate));
+      ..sort((a, b) {
+        if (a.priority != b.priority) {
+          return b.priority.compareTo(a.priority);
+        }
+        return a.dueDate.compareTo(b.dueDate);
+      });
   }
 
   List<Task> get completedTasks {
@@ -137,6 +151,21 @@ class TodoModel extends ChangeNotifier {
 
   List<Task> get generalTasks {
     return _tasks.where((task) => task.type == 'generalTask').toList();
+  }
+
+  List<Task> get missedTasks {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+
+    return _tasks
+        .where((task) => task.dueDate.isBefore(today) && !task.completed)
+        .toList()
+      ..sort((a, b) {
+        if (a.priority != b.priority) {
+          return b.priority.compareTo(a.priority);
+        }
+        return a.dueDate.compareTo(b.dueDate);
+      });
   }
 
   Future<void> fetchTasks() async {

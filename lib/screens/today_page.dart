@@ -73,38 +73,51 @@ class TodayPage extends StatelessWidget {
             );
           }
 
-          return ListView(
+          return Stack(
             children: [
-              if (todayTasks.isNotEmpty) ...[
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 16.0, horizontal: 16.0),
-                  child: Text(
-                    'Today\'s Tasks',
-                    style: theme.textTheme.titleLarge?.copyWith(
-                      color: yellowColor,
-                      fontFamily: 'Montserrat',
-                    ),
+              if (todayTasks.isNotEmpty || completedTasks.isNotEmpty)
+                Positioned.fill(
+                  child: Image.asset(
+                    isDarkMode
+                        ? 'assets/images/bg2.jpg'
+                        : 'assets/images/bg.jpg',
+                    fit: BoxFit.cover,
                   ),
                 ),
-                ...todayTasks.map((task) => _buildTaskCard(
-                    context, task, model, yellowColor, isDarkMode)),
-              ],
-              if (completedTasks.isNotEmpty) ...[
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 16.0, horizontal: 16.0),
-                  child: Text(
-                    'Completed Tasks',
-                    style: theme.textTheme.titleLarge?.copyWith(
-                      color: yellowColor,
-                      fontFamily: 'Montserrat',
+              ListView(
+                children: [
+                  if (todayTasks.isNotEmpty) ...[
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 16.0, horizontal: 16.0),
+                      child: Text(
+                        'Today\'s Tasks',
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          color: yellowColor,
+                          fontFamily: 'Montserrat',
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                ...completedTasks.map((task) => _buildTaskCard(
-                    context, task, model, yellowColor, isDarkMode)),
-              ],
+                    ...todayTasks.map((task) => _buildTaskCard(
+                        context, task, model, yellowColor, isDarkMode)),
+                  ],
+                  if (completedTasks.isNotEmpty) ...[
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 16.0, horizontal: 16.0),
+                      child: Text(
+                        'Completed Tasks',
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          color: yellowColor,
+                          fontFamily: 'Montserrat',
+                        ),
+                      ),
+                    ),
+                    ...completedTasks.map((task) => _buildTaskCard(
+                        context, task, model, yellowColor, isDarkMode)),
+                  ],
+                ],
+              ),
             ],
           );
         },
@@ -204,9 +217,9 @@ class TodayPage extends StatelessWidget {
               ),
             ],
           ),
-          trailing: const Icon(
+          trailing: Icon(
             Icons.arrow_forward_ios,
-            color: Color.fromARGB(255, 253, 199, 107),
+            color: priorityColor,
           ),
           onTap: () {
             Navigator.push(

@@ -19,6 +19,8 @@ class _CalendarPageState extends State<CalendarPage> {
   @override
   Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
     const primaryColor = Color.fromARGB(255, 250, 205, 126);
     final textColor =
         brightness == Brightness.dark ? Colors.white : Colors.black;
@@ -46,120 +48,131 @@ class _CalendarPageState extends State<CalendarPage> {
           },
         ),
       ),
-      body: Consumer<TodoModel>(
-        builder: (context, model, child) {
-          return Stack(
-            children: [
-              Column(
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Image.asset(
+              isDarkMode ? 'assets/images/bg3.jpg' : 'assets/images/bg1.jpg',
+              fit: BoxFit.cover,
+            ),
+          ),
+          Consumer<TodoModel>(
+            builder: (context, model, child) {
+              return Stack(
                 children: [
-                  Card(
-                    margin: const EdgeInsets.all(8.0),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16.0),
-                    ),
-                    elevation: 4.0,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TableCalendar<Task>(
-                        firstDay: DateTime.utc(2010, 10, 16),
-                        lastDay: DateTime.utc(2030, 3, 14),
-                        focusedDay: _focusedDay,
-                        calendarFormat: _calendarFormat,
-                        selectedDayPredicate: (day) {
-                          return isSameDay(_selectedDay, day);
-                        },
-                        onDaySelected: (selectedDay, focusedDay) {
-                          setState(() {
-                            _selectedDay = selectedDay;
-                            _focusedDay = focusedDay;
-                          });
-                          _showTasksForSelectedDay(context, model, selectedDay);
-                        },
-                        onPageChanged: (focusedDay) {
-                          _focusedDay = focusedDay;
-                        },
-                        eventLoader: (day) {
-                          return model.tasks.where((task) {
-                            return isSameDay(task.dueDate, day) &&
-                                task.type != 'stickyNote';
-                          }).toList();
-                        },
-                        calendarStyle: CalendarStyle(
-                          todayDecoration: const BoxDecoration(
-                            color: primaryColor,
-                            shape: BoxShape.circle,
-                          ),
-                          selectedDecoration: BoxDecoration(
-                            color: primaryColor.withOpacity(0.7),
-                            shape: BoxShape.circle,
-                          ),
-                          todayTextStyle: TextStyle(
-                            color: textColor,
-                          ),
-                          selectedTextStyle: TextStyle(
-                            color: textColor,
-                          ),
-                          weekendTextStyle: TextStyle(
-                            color: textColor,
-                          ),
-                          holidayTextStyle: TextStyle(
-                            color: textColor,
+                  Column(
+                    children: [
+                      Card(
+                        margin: const EdgeInsets.all(8.0),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16.0),
+                        ),
+                        elevation: 4.0,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: TableCalendar<Task>(
+                            firstDay: DateTime.utc(2010, 10, 16),
+                            lastDay: DateTime.utc(2030, 3, 14),
+                            focusedDay: _focusedDay,
+                            calendarFormat: _calendarFormat,
+                            selectedDayPredicate: (day) {
+                              return isSameDay(_selectedDay, day);
+                            },
+                            onDaySelected: (selectedDay, focusedDay) {
+                              setState(() {
+                                _selectedDay = selectedDay;
+                                _focusedDay = focusedDay;
+                              });
+                              _showTasksForSelectedDay(
+                                  context, model, selectedDay);
+                            },
+                            onPageChanged: (focusedDay) {
+                              _focusedDay = focusedDay;
+                            },
+                            eventLoader: (day) {
+                              return model.tasks.where((task) {
+                                return isSameDay(task.dueDate, day) &&
+                                    task.type != 'stickyNote';
+                              }).toList();
+                            },
+                            calendarStyle: CalendarStyle(
+                              todayDecoration: const BoxDecoration(
+                                color: primaryColor,
+                                shape: BoxShape.circle,
+                              ),
+                              selectedDecoration: BoxDecoration(
+                                color: primaryColor.withOpacity(0.7),
+                                shape: BoxShape.circle,
+                              ),
+                              todayTextStyle: TextStyle(
+                                color: textColor,
+                              ),
+                              selectedTextStyle: TextStyle(
+                                color: textColor,
+                              ),
+                              weekendTextStyle: TextStyle(
+                                color: textColor,
+                              ),
+                              holidayTextStyle: TextStyle(
+                                color: textColor,
+                              ),
+                            ),
+                            headerStyle: const HeaderStyle(
+                              titleTextStyle: TextStyle(
+                                color: primaryColor,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              formatButtonVisible: false,
+                              leftChevronIcon: Icon(
+                                Icons.chevron_left,
+                                color: primaryColor,
+                              ),
+                              rightChevronIcon: Icon(
+                                Icons.chevron_right,
+                                color: primaryColor,
+                              ),
+                            ),
+                            daysOfWeekStyle: DaysOfWeekStyle(
+                              weekdayStyle: TextStyle(
+                                color: textColor,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              weekendStyle: TextStyle(
+                                color: textColor,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
                         ),
-                        headerStyle: const HeaderStyle(
-                          titleTextStyle: TextStyle(
-                            color: primaryColor,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          formatButtonVisible: false,
-                          leftChevronIcon: Icon(
-                            Icons.chevron_left,
-                            color: primaryColor,
-                          ),
-                          rightChevronIcon: Icon(
-                            Icons.chevron_right,
-                            color: primaryColor,
-                          ),
+                      ),
+                    ],
+                  ),
+                  Positioned(
+                    top: 30,
+                    right: 75,
+                    child: ElevatedButton(
+                      onPressed: _toggleCalendarFormat,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: primaryColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
                         ),
-                        daysOfWeekStyle: DaysOfWeekStyle(
-                          weekdayStyle: TextStyle(
-                            color: textColor,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          weekendStyle: TextStyle(
-                            color: textColor,
-                            fontWeight: FontWeight.bold,
-                          ),
+                      ),
+                      child: Text(
+                        _calendarFormatLabel,
+                        style: TextStyle(
+                          color: textColor,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
                   ),
                 ],
-              ),
-              Positioned(
-                top: 30,
-                right: 75,
-                child: ElevatedButton(
-                  onPressed: _toggleCalendarFormat,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: primaryColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                  ),
-                  child: Text(
-                    _calendarFormatLabel,
-                    style: TextStyle(
-                      color: textColor,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          );
-        },
+              );
+            },
+          ),
+        ],
       ),
     );
   }
@@ -186,74 +199,95 @@ class _CalendarPageState extends State<CalendarPage> {
         side: BorderSide(color: primaryColor, width: 2),
       ),
       builder: (context) {
-        return Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                margin: const EdgeInsets.only(bottom: 8.0),
-                padding:
-                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).brightness == Brightness.dark
-                      ? Colors.grey[800]
-                      : Colors.white,
-                  borderRadius: BorderRadius.circular(30),
-                  border: Border.all(color: primaryColor, width: 2),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    CircleAvatar(
-                      backgroundColor: primaryColor,
-                      radius: 14,
-                      child: Text(
-                        '${tasks.length}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 8.0),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 8.0, horizontal: 16.0),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? Colors.grey[800]
+                          : Colors.white,
+                      borderRadius: BorderRadius.circular(30),
+                      border: Border.all(color: primaryColor, width: 2),
                     ),
-                    const SizedBox(width: 8.0),
-                    Text(
-                      tasks == 1 ? 'Task' : 'Tasks',
-                      style: TextStyle(
-                        color: Theme.of(context).brightness == Brightness.dark
-                            ? Colors.white
-                            : primaryColor,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: primaryColor,
+                          radius: 14,
+                          child: Text(
+                            '${tasks.length}',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8.0),
+                        Text(
+                          tasks.length == 1 ? 'Task' : 'Tasks',
+                          style: TextStyle(
+                            color:
+                                Theme.of(context).brightness == Brightness.dark
+                                    ? Colors.white
+                                    : primaryColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: ListView(
-                  children: tasks.map((task) {
-                    var textColor;
-                    return ListTile(
-                      title: Text(
-                        task.title,
-                        style: TextStyle(
-                          color: textColor,
-                          fontWeight: FontWeight.bold,
+                  ),
+                  ListView(
+                    shrinkWrap: true,
+                    children: tasks.map((task) {
+                      var textColor =
+                          task.completed ? Colors.green : Colors.red;
+                      return ListTile(
+                        title: Text(
+                          task.title,
+                          style: TextStyle(
+                            color: textColor,
+                            fontWeight: FontWeight.bold,
+                            decoration: task.completed
+                                ? TextDecoration.lineThrough
+                                : TextDecoration.none,
+                          ),
                         ),
-                      ),
-                      subtitle: Text(
-                        _truncateDescription(task.description),
-                        style: TextStyle(
-                          color: textColor,
+                        subtitle: Text(
+                          _truncateDescription(task.description),
+                          style: TextStyle(
+                            color: textColor,
+                            decoration: task.completed
+                                ? TextDecoration.lineThrough
+                                : TextDecoration.none,
+                          ),
                         ),
-                      ),
-                      onTap: () => _showTaskDetails(context, task),
-                    );
-                  }).toList(),
-                ),
+                        trailing: Checkbox(
+                          value: task.completed,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              task.completed = value!;
+                            });
+                            // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+                            model.notifyListeners();
+                          },
+                        ),
+                        onTap: () => _showTaskDetails(context, task),
+                      );
+                    }).toList(),
+                  ),
+                ],
               ),
-            ],
-          ),
+            );
+          },
         );
       },
     );
@@ -266,71 +300,101 @@ class _CalendarPageState extends State<CalendarPage> {
       context: context,
       builder: (context) {
         final brightness = Theme.of(context).brightness;
-        return AlertDialog(
-          backgroundColor: primaryColor,
-          title: Text(
-            task.title,
-            style: TextStyle(
-              color: brightness == Brightness.dark
-                  ? const Color.fromARGB(255, 0, 0, 0)
-                  : Colors.black,
-            ),
+        final isDarkMode = brightness == Brightness.dark;
+        final backgroundColor = isDarkMode ? Colors.black : Colors.white;
+        final textColor = isDarkMode ? Colors.white : Colors.black;
+        final descriptionColor = isDarkMode ? Colors.grey[300] : Colors.black87;
+
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
           ),
-          content: ConstrainedBox(
-            constraints: const BoxConstraints(
-              minWidth: 500,
+          backgroundColor: Colors.transparent,
+          child: Container(
+            decoration: BoxDecoration(
+              color: backgroundColor,
+              border: Border.all(color: primaryColor, width: 2),
+              borderRadius: BorderRadius.circular(20),
             ),
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Date: ${_formattedDate(task.dueDate)}',
-                    style: TextStyle(
-                      color: brightness == Brightness.dark
-                          ? const Color.fromARGB(255, 0, 0, 0)
-                          : Colors.black,
-                      fontWeight: FontWeight.bold,
-                    ),
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  task.title,
+                  style: const TextStyle(
+                    color: primaryColor,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
                   ),
-                  const SizedBox(height: 8.0),
-                  const Text(
-                    'Description:',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    task.description ?? 'No description',
-                    style: TextStyle(
-                      color: brightness == Brightness.dark
-                          ? const Color.fromARGB(255, 0, 0, 0)
-                          : Colors.black87,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              style: TextButton.styleFrom(
-                foregroundColor: primaryColor,
-              ),
-              child: Text(
-                'Close',
-                style: TextStyle(
-                  color: brightness == Brightness.dark
-                      ? const Color.fromARGB(255, 0, 0, 0)
-                      : const Color.fromARGB(255, 0, 0, 0),
-                  fontWeight: FontWeight.bold,
                 ),
-              ),
+                const SizedBox(height: 10),
+                Row(
+                  children: [
+                    const Icon(Icons.calendar_today, color: primaryColor),
+                    const SizedBox(width: 5),
+                    Text(
+                      'Date: ${_formattedDate(task.dueDate)}',
+                      style: TextStyle(
+                        color: textColor,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                const Divider(color: primaryColor),
+                const SizedBox(height: 10),
+                const Text(
+                  'Description:',
+                  style: TextStyle(
+                    color: primaryColor,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 5),
+                Text(
+                  task.description ?? 'No description',
+                  style: TextStyle(
+                    color: descriptionColor,
+                    fontSize: 16,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  task.completed ? 'Completed' : 'Incomplete',
+                  style: TextStyle(
+                    color: task.completed ? Colors.green : Colors.red,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: ElevatedButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: primaryColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+                    child: const Text(
+                      'Close',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         );
       },
     );

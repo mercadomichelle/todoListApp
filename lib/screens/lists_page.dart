@@ -14,12 +14,13 @@ class ListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
     const yellowColor = Color.fromARGB(255, 253, 199, 107);
 
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'TASKS',
+          'ALL TASKS',
           style: TextStyle(
             color: yellowColor,
             fontFamily: 'BebasNeue',
@@ -33,74 +34,108 @@ class ListPage extends StatelessWidget {
       drawer: const AppDrawer(),
       body: Consumer<TodoModel>(
         builder: (context, model, child) {
-          if (model.isLoading) {
-            return const Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(yellowColor),
-              ),
-            );
-          }
+          final bool showBackground = model.recentTasks.isNotEmpty ||
+              model.completedTasks.isNotEmpty ||
+              model.missedTasks.isNotEmpty;
 
-          final List<Task> recentTasks = model.recentTasks;
-          final List<Task> completedTasks = model.completedTasks;
-
-          if (recentTasks.isEmpty && completedTasks.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    'assets/images/no_tasks2.png',
-                    height: 200,
-                    width: 200,
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'No tasks available.',
-                    style: theme.textTheme.titleLarge?.copyWith(
-                      color: yellowColor,
-                      fontFamily: 'Montserrat',
-                      fontSize: 20,
-                      fontStyle: FontStyle.italic,
-                    ),
-                  ),
-                ],
-              ),
-            );
-          }
-
-          return ListView(
+          return Stack(
             children: [
-              if (recentTasks.isNotEmpty) ...[
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 16.0, horizontal: 16.0),
-                  child: Text(
-                    'Recent Tasks',
-                    style: theme.textTheme.titleLarge?.copyWith(
-                      color: yellowColor,
-                      fontFamily: 'Montserrat',
-                    ),
+              if (showBackground)
+                Positioned.fill(
+                  child: Image.asset(
+                    isDarkMode
+                        ? 'assets/images/bg2.jpg'
+                        : 'assets/images/bg.jpg',
+                    fit: BoxFit.cover,
                   ),
                 ),
-                ...recentTasks.map((task) =>
-                    _buildTaskCard(context, task, model, yellowColor)),
-              ],
-              if (completedTasks.isNotEmpty) ...[
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 16.0, horizontal: 16.0),
-                  child: Text(
-                    'Completed Tasks',
-                    style: theme.textTheme.titleLarge?.copyWith(
-                      color: yellowColor,
-                      fontFamily: 'Montserrat',
-                    ),
+              if (model.isLoading)
+                const Center(
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(yellowColor),
                   ),
+                )
+              else if (model.recentTasks.isEmpty &&
+                  model.completedTasks.isEmpty &&
+                  model.missedTasks.isEmpty)
+                Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        'assets/images/no_tasks2.png',
+                        height: 200,
+                        width: 200,
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        'No tasks available.',
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          color: yellowColor,
+                          fontFamily: 'Montserrat',
+                          fontSize: 20,
+                          fontStyle: FontStyle.italic,
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              else
+                ListView(
+                  children: [
+                    if (model.missedTasks.isNotEmpty) ...[
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 16.0, horizontal: 16.0),
+                        child: Text(
+                          'Missed Tasks',
+                          style: theme.textTheme.titleLarge?.copyWith(
+                            color: yellowColor,
+                            fontFamily: 'Montserrat',
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      ...model.missedTasks.map((task) =>
+                          _buildTaskCard(context, task, model, yellowColor)),
+                    ],
+                    if (model.recentTasks.isNotEmpty) ...[
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 16.0, horizontal: 16.0),
+                        child: Text(
+                          'Recent Tasks',
+                          style: theme.textTheme.titleLarge?.copyWith(
+                            color: yellowColor,
+                            fontFamily: 'Montserrat',
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      ...model.recentTasks.map((task) =>
+                          _buildTaskCard(context, task, model, yellowColor)),
+                    ],
+                    if (model.completedTasks.isNotEmpty) ...[
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 16.0, horizontal: 16.0),
+                        child: Text(
+                          'Completed Tasks',
+                          style: theme.textTheme.titleLarge?.copyWith(
+                            color: yellowColor,
+                            fontFamily: 'Montserrat',
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      ...model.completedTasks.map((task) =>
+                          _buildTaskCard(context, task, model, yellowColor)),
+                    ],
+                  ],
                 ),
-                ...completedTasks.map((task) =>
-                    _buildTaskCard(context, task, model, yellowColor)),
-              ],
             ],
           );
         },

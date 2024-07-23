@@ -69,7 +69,10 @@ flutter:
     - assets/images/no_tasks.png
     - assets/images/no_tasks1.png
     - assets/images/no_tasks2.png
-        
+    - assets/images/bg.jpg
+    - assets/images/bg1.jpg
+    - assets/images/bg2.jpg
+    - assets/images/bg3.jpg
 
   # To add assets to your application, add an assets section, like this:
   #   - images/a_dot_ham.jpeg
@@ -94,7 +97,10 @@ flutter:
         - asset: assets/fonts/BebasNeue-Regular.ttf     
     - family: Ubuntu
       fonts:
-        - asset: assets/fonts/Ubuntu-Regular.ttf       
+        - asset: assets/fonts/Ubuntu-Regular.ttf    
+    - family: PassionOne
+      fonts:
+        - asset: assets/fonts/PassionOne-Regular.ttf   
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro

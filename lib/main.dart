@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
       child: Consumer<ThemeModel>(
         builder: (context, themeModel, child) => MaterialApp(
           debugShowCheckedModeBanner: false,
-          title: 'To-Do App',
+          title: 'TaskLy',
           theme: themeModel.currentTheme,
           home: showIntro ? const IntroPage() : const ListPage(),
           routes: {

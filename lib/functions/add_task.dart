@@ -54,8 +54,8 @@ class _AddTaskPageState extends State<AddTaskPage> {
                   filled: true,
                   fillColor: const Color.fromARGB(255, 250, 205, 126),
                 ),
-                style:
-                    const TextStyle(color: Colors.black, fontFamily: 'Ubuntu'),
+                style: const TextStyle(
+                    color: Colors.black, fontFamily: 'Ubuntu', fontSize: 14),
                 cursorColor: Colors.black,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -86,10 +86,10 @@ class _AddTaskPageState extends State<AddTaskPage> {
                   fillColor: const Color.fromARGB(255, 250, 205, 126),
                   alignLabelWithHint: true,
                 ),
-                style:
-                    const TextStyle(color: Colors.black, fontFamily: 'Ubuntu'),
+                style: const TextStyle(
+                    color: Colors.black, fontFamily: 'Ubuntu', fontSize: 14),
                 cursorColor: Colors.black,
-                maxLines: 5,
+                maxLines: 3,
               ),
               const SizedBox(height: 16),
               TextButton(
@@ -151,7 +151,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                           DateFormat('dd MMMM yyyy').format(_dueDate),
                           style: const TextStyle(
                             color: Colors.black,
-                            fontSize: 16,
+                            fontSize: 14,
                             fontFamily: 'Ubuntu',
                           ),
                         ),
@@ -196,7 +196,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                   });
                 },
               ),
-              const SizedBox(height: 40),
+              const SizedBox(height: 20),
               Center(
                 child: ElevatedButton(
                   onPressed: () {
@@ -218,7 +218,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
-                    minimumSize: const Size(300, 60),
+                    minimumSize: const Size(250, 50),
                     side: const BorderSide(
                       color: Colors.black,
                     ),
@@ -230,14 +230,14 @@ class _AddTaskPageState extends State<AddTaskPage> {
                     'ADD TASK',
                     style: TextStyle(
                       color: Colors.black,
-                      fontSize: 18,
+                      fontSize: 15,
                       fontWeight: FontWeight.bold,
                       fontFamily: 'Ubuntu',
                     ),
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 5),
             ],
           ),
         ),

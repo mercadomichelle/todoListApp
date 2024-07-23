@@ -14,10 +14,10 @@ class StickyWallPage extends StatefulWidget {
 
 class _StickyWallPageState extends State<StickyWallPage> {
   final List<Color> colors = [
-    Colors.yellow,
-    Colors.pink,
-    Colors.blue,
-    Colors.green,
+    const Color(0xFFF7C04D),
+    const Color(0xFFF6C1C0),
+    const Color(0xFFA2DFF7),
+    const Color(0xFFB0E57C),
   ];
 
   @override

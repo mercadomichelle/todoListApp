@@ -80,7 +80,9 @@ class _EditTaskPageState extends State<EditTaskPage> {
                           fillColor: const Color.fromARGB(255, 250, 205, 126),
                         ),
                         style: const TextStyle(
-                            color: Colors.black, fontFamily: 'Ubuntu'),
+                            color: Colors.black,
+                            fontFamily: 'Ubuntu',
+                            fontSize: 14),
                         cursorColor: Colors.black,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -112,9 +114,11 @@ class _EditTaskPageState extends State<EditTaskPage> {
                           alignLabelWithHint: true,
                         ),
                         style: const TextStyle(
-                            color: Colors.black, fontFamily: 'Ubuntu'),
+                            color: Colors.black,
+                            fontFamily: 'Ubuntu',
+                            fontSize: 14),
                         cursorColor: Colors.black,
-                        maxLines: 5,
+                        maxLines: 3,
                       ),
                       const SizedBox(height: 16),
                       TextButton(
@@ -179,7 +183,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
                                   DateFormat('dd MMMM yyyy').format(_dueDate),
                                   style: const TextStyle(
                                     color: Colors.black,
-                                    fontSize: 16,
+                                    fontSize: 14,
                                     fontFamily: 'Ubuntu',
                                   ),
                                 ),
@@ -242,7 +246,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
                               'High',
                               style: TextStyle(
                                 color: Colors.black,
-                                fontSize: 16,
+                                fontSize: 15,
                                 fontFamily: 'Ubuntu',
                               ),
                             ),
@@ -254,7 +258,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
                           });
                         },
                       ),
-                      const SizedBox(height: 40),
+                      const SizedBox(height: 20),
                       Center(
                         child: ElevatedButton(
                           onPressed: () {
@@ -275,7 +279,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.white,
-                            minimumSize: const Size(300, 60),
+                            minimumSize: const Size(250, 50),
                             side: const BorderSide(
                               color: Colors.black,
                             ),
@@ -287,14 +291,14 @@ class _EditTaskPageState extends State<EditTaskPage> {
                             'SAVE CHANGES',
                             style: TextStyle(
                               color: Colors.black,
-                              fontSize: 18,
+                              fontSize: 15,
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Ubuntu',
                             ),
                           ),
                         ),
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 5),
                     ],
                   ),
                 ),
