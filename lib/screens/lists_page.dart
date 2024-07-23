@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:appdev_proj/models/todo_model.dart';
 import 'package:appdev_proj/screens/task_details_page.dart';
-import 'package:appdev_proj/screens/add_task_page.dart';
+import 'package:appdev_proj/functions/add_task.dart';
 import 'package:appdev_proj/widgets/app_drawer.dart';
 import 'package:intl/intl.dart';
 

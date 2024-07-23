@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:appdev_proj/models/todo_model.dart';
-import 'package:appdev_proj/screens/edit_task_page.dart';
+import 'package:appdev_proj/functions/edit_task.dart';
+import 'package:appdev_proj/functions/delete_task.dart';
 
 class TaskDetailPage extends StatelessWidget {
   final Task task;
@@ -38,6 +39,7 @@ class TaskDetailPage extends StatelessWidget {
               );
               if (updatedTask != null) {
                 // Update task in the model
+                // ignore: use_build_context_synchronously
                 Provider.of<TodoModel>(context, listen: false)
                     .updateTask(task, updatedTask);
               }
@@ -46,7 +48,7 @@ class TaskDetailPage extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.delete, color: theme.iconTheme.color),
             onPressed: () {
-              _confirmDelete(context);
+              DeleteTaskDialog.show(context, task); // Use the new delete dialog
             },
           ),
         ],
@@ -64,7 +66,6 @@ class TaskDetailPage extends StatelessWidget {
           final createdTimeFormatted =
               DateFormat('HH:mm').format(updatedTask.creationDate);
 
-          // Update priority color
           Color priorityColor;
           switch (updatedTask.priority) {
             case 3:
@@ -168,42 +169,6 @@ class TaskDetailPage extends StatelessWidget {
           );
         },
       ),
-    );
-  }
-
-  void _confirmDelete(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Theme(
-          data: ThemeData.light().copyWith(
-            dialogBackgroundColor: const Color.fromARGB(255, 255, 238, 205),
-            textButtonTheme: TextButtonThemeData(
-              style: TextButton.styleFrom(foregroundColor: Colors.black),
-            ),
-          ),
-          child: AlertDialog(
-            title: const Text('Delete Task'),
-            content: const Text('Are you sure you want to delete this task?'),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text('Cancel'),
-              ),
-              TextButton(
-                onPressed: () {
-                  Provider.of<TodoModel>(context, listen: false)
-                      .removeTask(task);
-                  Navigator.of(context).popUntil((route) => route.isFirst);
-                },
-                child: const Text('Delete'),
-              ),
-            ],
-          ),
-        );
-      },
     );
   }
 }

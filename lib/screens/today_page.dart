@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:appdev_proj/models/todo_model.dart';
 import 'package:appdev_proj/screens/task_details_page.dart';
-import 'package:appdev_proj/screens/add_task_page.dart';
+import 'package:appdev_proj/functions/add_task.dart';
 import 'package:appdev_proj/widgets/app_drawer.dart';
 import 'package:intl/intl.dart';
 
@@ -35,17 +35,18 @@ class TodayPage extends StatelessWidget {
           final DateTime today = DateTime.now();
           final List<Task> todayTasks = model.tasks.where((task) {
             return !task.completed &&
+                task.type != 'stickyNote' &&
                 task.dueDate.year == today.year &&
                 task.dueDate.month == today.month &&
                 task.dueDate.day == today.day;
           }).toList();
 
-          final List<Task> completedTasks = model.completedTasks
-              .where((task) =>
-                  task.dueDate.year == today.year &&
-                  task.dueDate.month == today.month &&
-                  task.dueDate.day == today.day)
-              .toList();
+          final List<Task> completedTasks = model.completedTasks.where((task) {
+            return task.type != 'stickyNote' &&
+                task.dueDate.year == today.year &&
+                task.dueDate.month == today.month &&
+                task.dueDate.day == today.day;
+          }).toList();
 
           if (todayTasks.isEmpty && completedTasks.isEmpty) {
             return Center(

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:appdev_proj/models/todo_model.dart';
 import 'package:appdev_proj/screens/task_details_page.dart';
-import 'package:appdev_proj/screens/add_task_page.dart';
+import 'package:appdev_proj/functions/add_task.dart';
 import 'package:appdev_proj/widgets/app_drawer.dart';
 import 'package:intl/intl.dart';
 
@@ -34,12 +34,14 @@ class UpcomingPage extends StatelessWidget {
         builder: (context, model, child) {
           final DateTime now = DateTime.now();
           final List<Task> upcomingTasks = model.tasks.where((task) {
-            return !task.completed && task.dueDate.isAfter(now);
+            return !task.completed &&
+                task.dueDate.isAfter(now) &&
+                task.type != 'stickyNote';
           }).toList();
 
-          final List<Task> completedTasks = model.completedTasks
-              .where((task) => task.dueDate.isAfter(now))
-              .toList();
+          final List<Task> completedTasks = model.completedTasks.where((task) {
+            return task.dueDate.isAfter(now) && task.type != 'stickyNote';
+          }).toList();
 
           if (upcomingTasks.isEmpty && completedTasks.isEmpty) {
             return Center(

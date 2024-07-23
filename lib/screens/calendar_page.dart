@@ -80,7 +80,8 @@ class _CalendarPageState extends State<CalendarPage> {
                         },
                         eventLoader: (day) {
                           return model.tasks.where((task) {
-                            return isSameDay(task.dueDate, day);
+                            return isSameDay(task.dueDate, day) &&
+                                task.type != 'stickyNote';
                           }).toList();
                         },
                         calendarStyle: CalendarStyle(
@@ -167,7 +168,8 @@ class _CalendarPageState extends State<CalendarPage> {
       BuildContext context, TodoModel model, DateTime selectedDay) {
     const primaryColor = Color.fromARGB(255, 250, 205, 126);
     final tasks = model.tasks
-        .where((task) => isSameDay(task.dueDate, selectedDay))
+        .where((task) =>
+            isSameDay(task.dueDate, selectedDay) && task.type != 'stickyNote')
         .toList();
 
     if (tasks.isEmpty) {
@@ -216,7 +218,7 @@ class _CalendarPageState extends State<CalendarPage> {
                     ),
                     const SizedBox(width: 8.0),
                     Text(
-                      '${tasks.length} ${tasks.length == 1 ? 'Task' : 'Tasks'}',
+                      tasks == 1 ? 'Task' : 'Tasks',
                       style: TextStyle(
                         color: Theme.of(context).brightness == Brightness.dark
                             ? Colors.white

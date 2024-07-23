@@ -99,6 +99,7 @@ class _StickyWallPageState extends State<StickyWallPage> {
                       description: content,
                       dueDate: DateTime.now(),
                       creationDate: DateTime.now(),
+                      type: 'stickyNote', // Set type to stickyNote
                     );
                     Provider.of<TodoModel>(context, listen: false)
                         .addTask(task);
@@ -145,7 +146,8 @@ class _StickyWallPageState extends State<StickyWallPage> {
                 const Text('Edit Note', style: TextStyle(fontFamily: 'Ubuntu')),
             content: Container(
               constraints: const BoxConstraints(
-                maxWidth: 400,
+                minWidth: 300,
+                maxWidth: 300,
               ),
               child: Form(
                 key: formKey,
@@ -200,6 +202,7 @@ class _StickyWallPageState extends State<StickyWallPage> {
                       dueDate: task.dueDate,
                       creationDate: task.creationDate,
                       completed: task.completed,
+                      type: 'stickyNote', // Set type to stickyNote
                     );
                     Provider.of<TodoModel>(context, listen: false)
                         .updateTask(task, newTask);
@@ -271,9 +274,8 @@ class _StickyWallPageState extends State<StickyWallPage> {
     final theme = Theme.of(context);
     final isDarkMode = theme.brightness == Brightness.dark;
     final backgroundColor =
-        isDarkMode ? Colors.black : Color.fromARGB(255, 245, 245, 245);
-    final textColor =
-        isDarkMode ? const Color.fromARGB(255, 255, 255, 255) : Colors.black;
+        isDarkMode ? Colors.black : const Color.fromARGB(255, 245, 245, 245);
+    final textColor = isDarkMode ? Colors.black : Colors.black;
     const yellowColor = Color.fromARGB(255, 253, 199, 107);
 
     return Scaffold(
@@ -295,13 +297,14 @@ class _StickyWallPageState extends State<StickyWallPage> {
         padding: const EdgeInsets.all(8.0),
         child: Consumer<TodoModel>(
           builder: (context, todoModel, child) {
-            final activeTasks =
-                todoModel.tasks.where((task) => !task.completed).toList();
+            final stickyNotes = todoModel.tasks
+                .where((task) => task.type == 'stickyNote')
+                .toList();
             return StaggeredGridView.countBuilder(
               crossAxisCount: 4,
-              itemCount: activeTasks.length,
+              itemCount: stickyNotes.length,
               itemBuilder: (BuildContext context, int index) {
-                final task = activeTasks[index];
+                final task = stickyNotes[index];
                 return GestureDetector(
                   onTap: () => _editNote(task),
                   onLongPress: () => _deleteNote(task),
