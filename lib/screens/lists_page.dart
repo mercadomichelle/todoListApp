@@ -205,7 +205,7 @@ class ListPage extends StatelessWidget {
               color: isDarkMode ? Colors.white : Colors.black87,
               fontFamily: 'Ubuntu',
               fontWeight: FontWeight.bold,
-              fontSize: 18,
+              fontSize: 20,
               decoration: task.completed
                   ? TextDecoration.lineThrough
                   : TextDecoration.none,

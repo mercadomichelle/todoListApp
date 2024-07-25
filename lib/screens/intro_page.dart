@@ -11,7 +11,6 @@ class IntroPage extends StatelessWidget {
         child: Column(
           children: [
             const SizedBox(height: 30),
-
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: ShaderMask(
@@ -34,10 +33,7 @@ class IntroPage extends StatelessWidget {
                 ),
               ),
             ),
-
             const SizedBox(height: 10),
-
-            // Image and other content
             Expanded(
               child: Center(
                 child: Column(

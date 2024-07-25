@@ -24,6 +24,8 @@ class _StickyWallPageState extends State<StickyWallPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDarkMode = theme.brightness == Brightness.dark;
+    final backgroundImage =
+        isDarkMode ? 'assets/images/bg3.jpg' : 'assets/images/bg1.jpg';
     final backgroundColor =
         isDarkMode ? Colors.black : const Color.fromARGB(255, 245, 245, 245);
     final textColor = isDarkMode ? Colors.black : Colors.black;
@@ -44,37 +46,48 @@ class _StickyWallPageState extends State<StickyWallPage> {
           color: Color.fromARGB(255, 253, 199, 107),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Consumer<TodoModel>(
-          builder: (context, todoModel, child) {
-            final stickyNotes = todoModel.tasks
-                .where((task) => task.type == 'stickyNote')
-                .toList();
-            return StaggeredGridView.countBuilder(
-              crossAxisCount: 4,
-              itemCount: stickyNotes.length,
-              itemBuilder: (BuildContext context, int index) {
-                final task = stickyNotes[index];
-                return GestureDetector(
-                  onTap: () => editNoteDialog(context, task),
-                  onLongPress: () => deleteNoteDialog(context, task),
-                  child: NoteTile(
-                    title: task.title,
-                    content: task.description,
-                    timestamp: DateFormat('EEE MMM dd kk:mm')
-                        .format(task.creationDate),
-                    color: colors[index % colors.length],
-                    textColor: textColor,
-                  ),
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Image.asset(
+              backgroundImage,
+              fit: BoxFit.cover,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Consumer<TodoModel>(
+              builder: (context, todoModel, child) {
+                final stickyNotes = todoModel.tasks
+                    .where((task) => task.type == 'stickyNote')
+                    .toList();
+                return StaggeredGridView.countBuilder(
+                  crossAxisCount: 4,
+                  itemCount: stickyNotes.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final task = stickyNotes[index];
+                    return GestureDetector(
+                      onTap: () => editNoteDialog(context, task),
+                      onLongPress: () => deleteNoteDialog(context, task),
+                      child: NoteTile(
+                        title: task.title,
+                        content: task.description,
+                        timestamp: DateFormat('EEE MMM dd kk:mm')
+                            .format(task.creationDate),
+                        color: colors[index % colors.length],
+                        textColor: textColor,
+                      ),
+                    );
+                  },
+                  staggeredTileBuilder: (int index) =>
+                      const StaggeredTile.fit(2),
+                  mainAxisSpacing: 8.0,
+                  crossAxisSpacing: 8.0,
                 );
               },
-              staggeredTileBuilder: (int index) => const StaggeredTile.fit(2),
-              mainAxisSpacing: 8.0,
-              crossAxisSpacing: 8.0,
-            );
-          },
-        ),
+            ),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => addNoteDialog(context),

@@ -73,6 +73,8 @@ flutter:
     - assets/images/bg1.jpg
     - assets/images/bg2.jpg
     - assets/images/bg3.jpg
+    - assets/images/add_task.png
+    - assets/images/edit_task.png
 
   # To add assets to your application, add an assets section, like this:
   #   - images/a_dot_ham.jpeg

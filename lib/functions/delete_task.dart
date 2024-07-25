@@ -10,7 +10,7 @@ class DeleteTaskDialog {
       builder: (BuildContext context) {
         return Theme(
           data: ThemeData.light().copyWith(
-            dialogBackgroundColor: const Color.fromARGB(255, 255, 238, 205),
+            dialogBackgroundColor: const Color.fromARGB(255, 250, 205, 126),
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(foregroundColor: Colors.black),
             ),

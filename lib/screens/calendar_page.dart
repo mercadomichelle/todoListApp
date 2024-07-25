@@ -105,10 +105,10 @@ class _CalendarPageState extends State<CalendarPage> {
                                 shape: BoxShape.circle,
                               ),
                               todayTextStyle: TextStyle(
-                                color: textColor,
+                                color: isDarkMode ? Colors.black : Colors.black,
                               ),
                               selectedTextStyle: TextStyle(
-                                color: textColor,
+                                color: isDarkMode ? Colors.black : Colors.black,
                               ),
                               weekendTextStyle: TextStyle(
                                 color: textColor,
@@ -162,7 +162,7 @@ class _CalendarPageState extends State<CalendarPage> {
                       child: Text(
                         _calendarFormatLabel,
                         style: TextStyle(
-                          color: textColor,
+                          color: isDarkMode ? Colors.black : Colors.black,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -198,93 +198,118 @@ class _CalendarPageState extends State<CalendarPage> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(40)),
         side: BorderSide(color: primaryColor, width: 2),
       ),
+      isScrollControlled: true,
       builder: (context) {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
-            return Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(bottom: 8.0),
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 8.0, horizontal: 16.0),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).brightness == Brightness.dark
-                          ? Colors.grey[800]
-                          : Colors.white,
-                      borderRadius: BorderRadius.circular(30),
-                      border: Border.all(color: primaryColor, width: 2),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        CircleAvatar(
-                          backgroundColor: primaryColor,
-                          radius: 14,
-                          child: Text(
-                            '${tasks.length}',
-                            style: const TextStyle(
-                              color: Colors.white,
+            final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+            final backgroundColor =
+                isDarkMode ? Colors.grey[900] : Colors.white;
+            final textColor = isDarkMode ? Colors.white : Colors.black;
+            final descriptionColor =
+                isDarkMode ? Colors.grey[300] : Colors.black87;
+
+            return Container(
+              constraints: BoxConstraints(
+                maxHeight: MediaQuery.of(context).size.height * 0.6,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.only(bottom: 8.0),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8.0, horizontal: 16.0),
+                      decoration: BoxDecoration(
+                        color: backgroundColor,
+                        borderRadius: BorderRadius.circular(30),
+                        border: Border.all(color: primaryColor, width: 2),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          CircleAvatar(
+                            backgroundColor: primaryColor,
+                            radius: 14,
+                            child: Text(
+                              '${tasks.length}',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 8.0),
+                          Text(
+                            tasks.length == 1 ? 'Task' : 'Tasks',
+                            style: TextStyle(
+                              color: textColor,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                        ),
-                        const SizedBox(width: 8.0),
-                        Text(
-                          tasks.length == 1 ? 'Task' : 'Tasks',
-                          style: TextStyle(
-                            color:
-                                Theme.of(context).brightness == Brightness.dark
-                                    ? Colors.white
-                                    : primaryColor,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  ListView(
-                    shrinkWrap: true,
-                    children: tasks.map((task) {
-                      var textColor =
-                          task.completed ? Colors.green : Colors.red;
-                      return ListTile(
-                        title: Text(
-                          task.title,
-                          style: TextStyle(
-                            color: textColor,
-                            fontWeight: FontWeight.bold,
-                            decoration: task.completed
-                                ? TextDecoration.lineThrough
-                                : TextDecoration.none,
-                          ),
-                        ),
-                        subtitle: Text(
-                          _truncateDescription(task.description),
-                          style: TextStyle(
-                            color: textColor,
-                            decoration: task.completed
-                                ? TextDecoration.lineThrough
-                                : TextDecoration.none,
-                          ),
-                        ),
-                        trailing: Checkbox(
-                          value: task.completed,
-                          onChanged: (bool? value) {
-                            setState(() {
-                              task.completed = value!;
-                            });
-                            // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
-                            model.notifyListeners();
-                          },
-                        ),
-                        onTap: () => _showTaskDetails(context, task),
-                      );
-                    }).toList(),
-                  ),
-                ],
+                    Flexible(
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: tasks.length,
+                        itemBuilder: (context, index) {
+                          var task = tasks[index];
+                          var taskTextColor =
+                              task.completed ? Colors.green : Colors.red;
+                          var borderColor =
+                              task.completed ? Colors.green : Colors.red;
+                          return Container(
+                            margin: const EdgeInsets.symmetric(vertical: 5.0),
+                            decoration: BoxDecoration(
+                              color:
+                                  isDarkMode ? Colors.grey[850] : Colors.white,
+                              borderRadius: BorderRadius.circular(15),
+                              border: Border.all(color: borderColor, width: 2),
+                            ),
+                            child: ListTile(
+                              title: Text(
+                                task.title,
+                                style: TextStyle(
+                                  color: taskTextColor,
+                                  fontWeight: FontWeight.bold,
+                                  decoration: task.completed
+                                      ? TextDecoration.lineThrough
+                                      : TextDecoration.none,
+                                ),
+                              ),
+                              subtitle: Text(
+                                _truncateDescription(task.description),
+                                style: TextStyle(
+                                  color: descriptionColor,
+                                  decoration: task.completed
+                                      ? TextDecoration.lineThrough
+                                      : TextDecoration.none,
+                                ),
+                              ),
+                              trailing: Checkbox(
+                                value: task.completed,
+                                onChanged: (bool? value) {
+                                  setState(() {
+                                    task.completed = value!;
+                                    // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+                                    model.notifyListeners();
+                                  });
+                                },
+                                checkColor: Colors.white,
+                                activeColor: borderColor,
+                              ),
+                              onTap: () => _showTaskDetails(context, task),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
               ),
             );
           },
@@ -311,6 +336,10 @@ class _CalendarPageState extends State<CalendarPage> {
           ),
           backgroundColor: Colors.transparent,
           child: Container(
+            constraints: const BoxConstraints(
+              maxHeight: 600,
+              maxWidth: 400,
+            ),
             decoration: BoxDecoration(
               color: backgroundColor,
               border: Border.all(color: primaryColor, width: 2),
@@ -319,48 +348,57 @@ class _CalendarPageState extends State<CalendarPage> {
             padding: const EdgeInsets.all(20.0),
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  task.title,
-                  style: const TextStyle(
-                    color: primaryColor,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  children: [
-                    const Icon(Icons.calendar_today, color: primaryColor),
-                    const SizedBox(width: 5),
-                    Text(
-                      'Date: ${_formattedDate(task.dueDate)}',
-                      style: TextStyle(
-                        color: textColor,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
+                Flexible(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          task.title,
+                          style: const TextStyle(
+                            color: primaryColor,
+                            fontSize: 26,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Row(
+                          children: [
+                            const Icon(Icons.calendar_today,
+                                color: primaryColor),
+                            const SizedBox(width: 5),
+                            Text(
+                              'Date: ${_formattedDate(task.dueDate)}',
+                              style: TextStyle(
+                                color: textColor,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        const Divider(color: primaryColor),
+                        const SizedBox(height: 10),
+                        const Text(
+                          'Description:',
+                          style: TextStyle(
+                            color: primaryColor,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 5),
+                        Text(
+                          task.description ?? 'No description',
+                          style: TextStyle(
+                            color: descriptionColor,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                const Divider(color: primaryColor),
-                const SizedBox(height: 10),
-                const Text(
-                  'Description:',
-                  style: TextStyle(
-                    color: primaryColor,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 5),
-                Text(
-                  task.description ?? 'No description',
-                  style: TextStyle(
-                    color: descriptionColor,
-                    fontSize: 16,
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -372,7 +410,6 @@ class _CalendarPageState extends State<CalendarPage> {
                     fontSize: 16,
                   ),
                 ),
-                const SizedBox(height: 20),
                 Align(
                   alignment: Alignment.centerRight,
                   child: ElevatedButton(
