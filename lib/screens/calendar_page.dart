@@ -330,107 +330,110 @@ class _CalendarPageState extends State<CalendarPage> {
         final textColor = isDarkMode ? Colors.white : Colors.black;
         final descriptionColor = isDarkMode ? Colors.grey[300] : Colors.black87;
 
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
+        return Scaffold(
           backgroundColor: Colors.transparent,
-          child: Container(
-            constraints: const BoxConstraints(
-              maxHeight: 600,
-              maxWidth: 400,
-            ),
-            decoration: BoxDecoration(
-              color: backgroundColor,
-              border: Border.all(color: primaryColor, width: 2),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Flexible(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          task.title,
-                          style: const TextStyle(
-                            color: primaryColor,
-                            fontSize: 26,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        Row(
-                          children: [
-                            const Icon(Icons.calendar_today,
-                                color: primaryColor),
-                            const SizedBox(width: 5),
-                            Text(
-                              'Date: ${_formattedDate(task.dueDate)}',
-                              style: TextStyle(
-                                color: textColor,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
+          body: Stack(
+            children: [
+              Center(
+                child: Container(
+                  constraints: const BoxConstraints(
+                    maxHeight: 600,
+                    maxWidth: 400,
+                  ),
+                  decoration: BoxDecoration(
+                    color: backgroundColor,
+                    border: Border.all(color: primaryColor, width: 2),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Flexible(
+                        child: SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                task.title,
+                                style: const TextStyle(
+                                  color: primaryColor,
+                                  fontSize: 26,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
+                              const SizedBox(height: 10),
+                              Row(
+                                children: [
+                                  const Icon(Icons.calendar_today,
+                                      color: primaryColor),
+                                  const SizedBox(width: 5),
+                                  Text(
+                                    'Date: ${_formattedDate(task.dueDate)}',
+                                    style: TextStyle(
+                                      color: textColor,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 10),
+                              const Divider(color: primaryColor),
+                              const SizedBox(height: 10),
+                              const Text(
+                                'Description:',
+                                style: TextStyle(
+                                  color: primaryColor,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 5),
+                              Text(
+                                task.description ?? 'No description',
+                                style: TextStyle(
+                                  color: descriptionColor,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      Text(
+                        task.completed ? 'Completed' : 'Incomplete',
+                        style: TextStyle(
+                          color: task.completed ? Colors.green : Colors.red,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: ElevatedButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: primaryColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
                             ),
-                          ],
-                        ),
-                        const SizedBox(height: 10),
-                        const Divider(color: primaryColor),
-                        const SizedBox(height: 10),
-                        const Text(
-                          'Description:',
-                          style: TextStyle(
-                            color: primaryColor,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+                          ),
+                          child: const Text(
+                            'Close',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
-                        const SizedBox(height: 5),
-                        Text(
-                          task.description ?? 'No description',
-                          style: TextStyle(
-                            color: descriptionColor,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Text(
-                  task.completed ? 'Completed' : 'Incomplete',
-                  style: TextStyle(
-                    color: task.completed ? Colors.green : Colors.red,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: ElevatedButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: primaryColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
                       ),
-                    ),
-                    child: const Text(
-                      'Close',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    ],
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         );
       },
